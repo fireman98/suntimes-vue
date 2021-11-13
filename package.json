@@ -12,6 +12,8 @@
   "dependencies": {
     "core-js": "^3.8.3",
     "register-service-worker": "^1.7.2",
+    "strftime": "^0.10.0",
+    "suncalc": "^1.8.0",
     "vue": "^3.2.13",
     "vue-class-component": "^8.0.0-0",
     "vue-router": "^4.0.3",
@@ -19,6 +21,8 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/strftime": "^0.9.4",
+    "@types/suncalc": "^1.8.1",
     "@typescript-eslint/eslint-plugin": "^5.2.0",
     "@typescript-eslint/parser": "^5.2.0",
     "@vue/cli-plugin-babel": "~5.0.0-rc.0",
