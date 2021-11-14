@@ -59,7 +59,7 @@ export default class LocationSettings extends Vue {
 </script>
 
 <style lang="scss">
-@use "../scss/init/variables" as *;
+@use "@/scss/init/variables" as *;
 
 .position {
   &-wrapper {

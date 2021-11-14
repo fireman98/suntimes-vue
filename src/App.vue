@@ -1,30 +1,60 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <page-header @sidebaron="sidebarActive = true"></page-header>
+  <div class="content" :class="routeClass">
+    <router-view
+      class="container"
+      @set-route-class="setRouteClass($event)"
+    ></router-view>
+  </div>
+  <page-sidebar
+    @sidebaroff="sidebarActive = false"
+    :active="sidebarActive"
+  ></page-sidebar>
 </template>
+<script lang="ts">
+import { Options, Vue } from "vue-class-component";
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+import PageHeader from "./components/Header.vue";
+import PageSidebar from "./components/Sidebar.vue";
 
-nav {
-  padding: 30px;
+@Options({
+  components: {
+    PageHeader,
+    PageSidebar,
+  },
+})
+export default class App extends Vue {
+  sidebarActive = false;
+  routeClass = "";
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+  unfocusButtonIfnotKeyboard() {
+    //Blur active element if clicked or touched, but not if interacted by keyboard or accessibility tools
+    const focused = document.activeElement;
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+    if (!focused || !(focused instanceof HTMLElement)) return;
+
+    const tagnames = ["button"];
+    if (!tagnames.includes(focused.tagName.toLowerCase())) return;
+
+    focused.blur();
+  }
+
+  setRouteClass(className: string) {
+    this.routeClass = className;
+  }
+
+  created() {
+    window.addEventListener("mouseup", this.unfocusButtonIfnotKeyboard);
+    window.addEventListener("touchend", this.unfocusButtonIfnotKeyboard);
+  }
+
+  destroyed() {
+    window.removeEventListener("mouseup", this.unfocusButtonIfnotKeyboard);
+    window.removeEventListener("touchend", this.unfocusButtonIfnotKeyboard);
   }
 }
+</script>
+
+<style lang="scss">
+@use "./scss/app.scss";
 </style>

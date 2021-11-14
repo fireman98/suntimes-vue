@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="suntimes__wrapper" :style="styleForWrapper">
     <div class="background background__current"></div>
     <div class="background background__next"></div>
     <div class="suntimes__header">
@@ -49,16 +49,16 @@
       }}</span>
       <br />
       <span>Altitude:</span>
-      <span class="notranslate">{{ sunPosition.altitude }} deg</span>
+      <span class="notranslate">{{ sunPosition.altitude.toFixed(3) }} deg</span>
       <br />
       <span>Altitude rate:</span>
-      <span class="notranslate">{{ altituderate }} deg / 5min</span>
+      <span class="notranslate">{{ altituderate.toFixed(2) }} deg / 5min</span>
       <br />
       <span>Azimuth:</span>
-      <span class="notranslate">{{ sunPosition.azimuth }} deg</span>
+      <span class="notranslate">{{ sunPosition.azimuth.toFixed(3) }} deg</span>
       <br />
       <span>Százalék:</span>
-      <span class="notranslate">{{ percentage }} %</span>
+      <span class="notranslate">{{ percentage.toFixed(3) }} %</span>
       <br />
       <div class="progress sunpercentage" :value="percentage">
         <div class="determinate" :style="{ width: percentage + '%' }"></div>
@@ -116,6 +116,10 @@ function format_timespan(timespan: number) {
 }
 
 @Options({
+  emits: {
+    "set-route-class": String,
+  },
+
   components: {
     LocationSettings,
     TimeSelector,
@@ -138,26 +142,18 @@ function format_timespan(timespan: number) {
 
     backgroundColor: {
       handler(newVal) {
-        /*this.$root.$el.style.setProperty(
-          "--background-sun-current",
-          newVal.current
-        );
-        this.$root.$el.style.setProperty("--background-sun-next", newVal.next);
-        this.$root.$el.style.setProperty(
-          "--background-sun-primary",
-          this.sunPosition.altitude > 10 ? "white" : "black"
-        );
-        this.$root.$el.style.setProperty(
-          "--opacity-sun-next",
-          newVal.nextOpacity
-        );*/
+        this.styles.backgroundSunCurrent = newVal.current;
+        this.styles.backgroundSunNext = newVal.next;
+        this.styles.backgroundSunPrimary =
+          this.sunPosition.altitude > 10 ? "white" : "black";
+        this.styles.opacitySunNext = newVal.nextOpacity;
       },
       immediate: true,
     },
 
     foregroundColor: {
       handler(newVal) {
-        //this.$root.$el.style.setProperty("--foreground-sun", newVal);
+        this.styles.foregroundSun = newVal;
       },
       immediate: true,
     },
@@ -183,6 +179,14 @@ export default class Suntimes extends Vue {
 
   locationSettingsActive = false;
 
+  styles = {
+    backgroundSunCurrent: "#ffffff",
+    backgroundSunNext: "#ffffff",
+    foregroundSun: "#000000",
+    backgroundSunPrimary: "#ffffff",
+    opacitySunNext: 0,
+  };
+
   get percentage(): number {
     if (!this.sunTimes.sunrise || !this.sunTimes.sunset || !this.now) return 0;
 
@@ -193,7 +197,7 @@ export default class Suntimes extends Vue {
     _now -= _sunrise;
     _sunset -= _sunrise;
 
-    return (_now / _sunset) * 100; //.toFixed(3);
+    return (_now / _sunset) * 100;
   }
 
   get sunTimes() {
@@ -211,12 +215,12 @@ export default class Suntimes extends Vue {
 
     this.altituderate = radians_to_degrees(
       ((_position.altitude - this.lastaltitude) / this.tickInterval) * 60000 * 5
-    ); //.toFixed(2); //one min
+    ); //one min
     this.lastaltitude = _position.altitude;
     return {
       ..._position,
-      altitude: radians_to_degrees(_position.altitude), //.toFixed(3),
-      azimuth: radians_to_degrees(_position.azimuth) + 180, //.toFixed(3),
+      altitude: radians_to_degrees(_position.altitude),
+      azimuth: radians_to_degrees(_position.azimuth) + 180,
     };
   }
 
@@ -228,6 +232,16 @@ export default class Suntimes extends Vue {
 
   get foregroundColor() {
     return this.sunPosition.altitude > 10 ? "black" : "white";
+  }
+
+  get styleForWrapper() {
+    return {
+      "--background-sun-current": this.styles.backgroundSunCurrent,
+      "--background-sun-next": this.styles.backgroundSunNext,
+      "--foreground-sun": this.styles.foregroundSun,
+      "--background-sun-primary": this.styles.backgroundSunPrimary,
+      "--opacity-sun-next": this.styles.opacitySunNext,
+    };
   }
 
   /**
@@ -286,19 +300,15 @@ export default class Suntimes extends Vue {
     if (!isNaN(_lng)) this.lng = _lng;
 
     if (!isNaN(_lat)) this.lat = _lat;
-
-    //Set page style
-    //this.$root.$emit("set-route-class", "suntimes");
   }
 
-  beforeDestroy() {
+  beforeUnmount() {
     this.stopTick();
-    //this.$root.$emit("set-route-class", "");
   }
 }
 </script>
 <style lang="scss" scoped>
-@use "../scss/init/variables" as *;
+@use "@/scss/init/variables" as *;
 
 .sunpercentage {
   width: 100%;
@@ -334,6 +344,29 @@ export default class Suntimes extends Vue {
       background: var(--background-sun-primary);
     }
   }
+
+  &__wrapper {
+    --background-sun-current: #ffffff;
+    --background-sun-next: #ffffff;
+    --foreground-sun: #000000;
+    --background-sun-primary: $light;
+    --opacity-sun-next: 0;
+    position: relative;
+    color: var(--foreground-sun);
+
+    .mui-select__menu {
+      color: #000000 !important;
+    }
+
+    input,
+    select {
+      color: var(--foreground-sun) !important;
+    }
+
+    label {
+      color: var(--foreground-sun) !important;
+    }
+  }
 }
 
 a {
@@ -347,7 +380,7 @@ a {
 }
 
 .background {
-  position: absolute;
+  position: fixed;
   left: 0;
   top: 0;
   width: 100%;
@@ -364,31 +397,6 @@ a {
     z-index: -1;
     opacity: var(--opacity-sun-next);
     background: var(--background-sun-next);
-  }
-}
-</style>
-
-<style lang="scss">
-#app.suntimes {
-  --background-sun-current: #ffffff;
-  --background-sun-next: #ffffff;
-  --foreground-sun: #000000;
-  --background-sun-primary: $light;
-  --opacity-sun-next: 0;
-  position: relative;
-  color: var(--foreground-sun);
-
-  .mui-select__menu {
-    color: #000000 !important;
-  }
-
-  input,
-  select {
-    color: var(--foreground-sun) !important;
-  }
-
-  label {
-    color: var(--foreground-sun) !important;
   }
 }
 </style>
