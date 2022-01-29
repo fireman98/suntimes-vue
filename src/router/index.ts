@@ -9,6 +9,13 @@ const routes: Array<RouteRecordRaw> = [
     name: 'home',
     component: lazyLoadView(import('../views/HomeView.vue'))
   },
+
+  {
+    path: '/times/sun',
+    name: "timesData",
+    component: lazyLoadView(import('../views/TimesView.vue'))
+  },
+
   {
     path: '/about',
     name: 'about',
