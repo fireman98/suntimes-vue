@@ -1,3 +1,7 @@
+/**
+ * Class for computing linear-gradients,
+ * from sun altitude and direction
+ */
 export class SkyEffect {
 
     static skyGradients = [

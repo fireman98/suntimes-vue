@@ -3,16 +3,18 @@
     <div class="indeterminate"></div>
   </div>
 </template>
-<script lang="ts">
-import { Options, Vue } from "vue-class-component";
+<script lang="ts">import { defineComponent, onMounted, onUnmounted } from "vue"
 
-@Options({})
-export default class Loading extends Vue {
-  created() {
-    console.log("Loading...");
+export default defineComponent({
+  name: "LoadingComponent",
+  setup () {
+    onMounted(() => {
+      console.log("Loading...")
+    })
+
+    onUnmounted(() => {
+      console.log("loaded")
+    })
   }
-  beforeDestroy() {
-    console.log("loaded");
-  }
-}
+})
 </script>

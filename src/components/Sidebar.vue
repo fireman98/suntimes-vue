@@ -3,11 +3,7 @@
     <div class="sidebar" :class="{ active: active }">
       <div>
         <ul>
-          <li
-            v-for="link in routes"
-            :key="link.path"
-            @click="$emit('sidebaroff')"
-          >
+          <li v-for="link in routes" :key="link.path" @click="$emit('sidebaroff')">
             <router-link :to="link.path" active-class="active">{{
               getTitle(link)
             }}</router-link>
@@ -25,42 +21,55 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import { RouteRecordRaw } from "vue-router";
+import { computed, defineComponent } from "vue"
+import { RouteRecordRaw, useRouter } from "vue-router"
 
-@Options({
+export default defineComponent({
+  name: "PageSidebar",
   props: {
     active: { type: Boolean },
   },
+
+  emits: {
+    'sidebaroff': () => true
+  },
+
+  setup () {
+    const router = useRouter()
+
+    //Define additional routes that not belong to the application
+    const additional_routes = [
+      {
+        name: "Github",
+        path: "https://github.com/fireman98/suntimes-vue",
+      },
+    ]
+
+    const routes = computed(() => {
+      return router.options.routes
+
+    })
+
+    const getTitle = (route: RouteRecordRaw) => {
+      if (!(typeof route === "object" && route !== null)) return "Invalid input"
+
+      if (route.meta && route.meta.title) return route.meta.title
+
+      if (route.name) return route.name
+
+      if (route.path) return route.path
+
+      return route
+    }
+
+    return {
+      routes, getTitle
+    }
+  }
 })
-export default class PageSidebar extends Vue {
-  //Define additional routes that not belong to the application
-  additional_routes = [
-    {
-      name: "Github",
-      path: "https://github.com/fireman98/suntimes-vue",
-    },
-  ];
-
-  get routes() {
-    return this.$router.options.routes;
-  }
-
-  getTitle(route: RouteRecordRaw) {
-    if (!(typeof route === "object" && route !== null)) return "Invalid input";
-
-    if (route.meta && route.meta.title) return route.meta.title;
-
-    if (route.name) return route.name;
-
-    if (route.path) return route.path;
-
-    return route;
-  }
-}
 </script>
 <style lang="scss" scoped>
-@use "@/scss/init/variables" as *;
+@use "@/scss/init/variables"as *;
 
 .sidebar {
   z-index: 6;
@@ -72,9 +81,11 @@ export default class PageSidebar extends Vue {
   background-color: black;
   transition: right 0.5s ease;
   border-left: 3px solid $blue;
+
   &.active {
     right: 0;
   }
+
   ul {
     margin-top: $header-height;
     margin-bottom: 5px;
@@ -82,11 +93,13 @@ export default class PageSidebar extends Vue {
     margin-right: 10px;
     padding: 0px;
   }
+
   li {
     padding: 10px;
     list-style-type: none;
     border-bottom: 1px solid $dark;
     text-align: right;
+
     &:hover {
       a {
         color: $medium;
@@ -94,10 +107,12 @@ export default class PageSidebar extends Vue {
       }
     }
   }
+
   a {
     transition: color 1s, text-shadow 1s;
     color: white;
     font-size: 1.6rem;
+
     &.router-link-exact-active {
       color: $blue;
       text-shadow: 0px 0px 1px $blue;
@@ -112,12 +127,10 @@ export default class PageSidebar extends Vue {
   bottom: 0;
   right: 0;
   background-color: $lightblue;
-  background-image: linear-gradient(
-    141deg,
-    $lighterblue 0%,
-    $lightblue 51%,
-    $mediumblue 75%
-  );
+  background-image: linear-gradient(141deg,
+      $lighterblue 0%,
+      $lightblue 51%,
+      $mediumblue 75%);
   opacity: 0.7;
   z-index: 5;
   cursor: pointer;

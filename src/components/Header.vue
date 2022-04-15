@@ -5,12 +5,8 @@
         <router-link to="/">Kezdőlap</router-link>
       </div>
       <div class="links">
-        <button
-          class="image-icon-wrapper"
-          aria-label="Oldalmenü megnyitása"
-          title="Oldalmenü"
-          @click="$emit('sidebaron')"
-        >
+        <button class="image-icon-wrapper" aria-label="Oldalmenü megnyitása" title="Oldalmenü"
+          @click="$emit('sidebaron')">
           <i class="fas fa-bars"></i>
         </button>
       </div>
@@ -19,37 +15,44 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
+import { defineComponent, onMounted, onUnmounted, ref } from "vue"
 
-@Options({
+export default defineComponent({
+  name: "PageHeader",
   emits: {
     sidebaron: null,
   },
+  setup () {
+
+    const lastScrollTop = ref(0)
+    const hidden = ref(false)
+    const ontop = ref(true)
+
+    const scrollHandler = () => {
+      hidden.value = lastScrollTop.value < document.documentElement.scrollTop
+      ontop.value = !document.documentElement.scrollTop
+      lastScrollTop.value = document.documentElement.scrollTop
+    }
+
+    onMounted(() => {
+      window.addEventListener("scroll", scrollHandler, { passive: true })
+    })
+
+    onUnmounted(() => {
+      window.removeEventListener("scroll", scrollHandler)
+    })
+
+    return {
+      hidden,
+      ontop
+    }
+
+  }
 })
-export default class PageHeader extends Vue {
-  lastScrollTop = 0;
-  hidden = false;
-  ontop = true;
-
-  scrollHandler() {
-    this.hidden = this.lastScrollTop < document.documentElement.scrollTop;
-
-    this.ontop = !document.documentElement.scrollTop;
-
-    this.lastScrollTop = document.documentElement.scrollTop;
-  }
-
-  created() {
-    window.addEventListener("scroll", this.scrollHandler, { passive: true });
-  }
-
-  destroyed() {
-    window.removeEventListener("scroll", this.scrollHandler);
-  }
-}
 </script>
 <style lang="scss" scoped>
-@use "@/scss/init/variables" as *;
+@use "@/scss/init/variables"as *;
+
 .header {
   position: fixed;
   top: 0;
@@ -61,18 +64,22 @@ export default class PageHeader extends Vue {
   border-bottom: 3px solid $blue;
   transition: top 0.5s ease;
   z-index: 2;
+
   .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
     height: 100%;
   }
+
   .companyName {
     font-size: 1.6rem;
+
     a {
       color: $lighter;
     }
   }
+
   .links {
     .fa-bars {
       font-size: 3rem;
@@ -80,6 +87,7 @@ export default class PageHeader extends Vue {
       color: $lighter;
     }
   }
+
   &.ontop {
     background-color: rgba($color: #000000, $alpha: 0.7);
     border-bottom-color: transparent;
@@ -88,10 +96,12 @@ export default class PageHeader extends Vue {
     .companyName a {
       color: white;
     }
+
     .fa-bars {
       color: white;
     }
   }
+
   &.hidden {
     top: -6rem;
   }

@@ -5,12 +5,9 @@
     <div class="suntimes__header">
       <h1>Suntimes</h1>
       <div class="suntimes__header__buttons">
-        <button
-          class="image-icon-wrapper location-settings__button btn"
-          :class="{ 'btn--active': locationSettingsActive }"
-          title="Location"
-          @click="locationSettingsActive = !locationSettingsActive"
-        >
+        <button class="image-icon-wrapper location-settings__button btn"
+          :class="{ 'btn--active': locationSettingsActive }" title="Location"
+          @click="locationSettingsActive = !locationSettingsActive">
           <i class="fas fa-map-marker-alt"></i>
         </button>
         <button disabled class="image-icon-wrapper btn">
@@ -20,13 +17,8 @@
     </div>
     <div class="suntimes__modals">
       <div class="suntimes__modals__modal" v-show="locationSettingsActive">
-        <location-settings
-          :lng="lng"
-          :lat="lat"
-          @update:lng="lng = $event"
-          @update:lat="lat = $event"
-          @geolocate="geolocate"
-        />
+        <location-settings :lng="lng" :lat="lat" @update:lng="lng = $event" @update:lat="lat = $event"
+          @geolocate="geolocate" />
       </div>
     </div>
     <div>
@@ -64,251 +56,251 @@
         <div class="determinate" :style="{ width: percentage + '%' }"></div>
       </div>
     </div>
-    <time-selector
-      :time="now"
-      @update:time="now = $event"
-      @stop-tick="stopTick"
-      @go-now="startTick"
-    />
+    <time-selector :time="now" @update:time="now = $event" @stop-tick="stopTick" @go-now="startTick" />
     <div>
       Sun data by:
-      <a href="https://www.npmjs.com/package/suncalc"
-        >https://www.npmjs.com/package/suncalc</a
-      >
+      <a href="https://www.npmjs.com/package/suncalc">https://www.npmjs.com/package/suncalc</a>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import SunCalc from "suncalc";
-import strftime from "strftime";
-import { SkyEffect } from "../classes/SkyEffect";
-import LocationSettings from "./LocationSettings.vue";
-import TimeSelector from "./TimeSelector.vue";
+import { computed, defineComponent, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
+import SunCalc from "suncalc"
+import strftime from "strftime"
+import { SkyEffect } from "../classes/SkyEffect"
+import LocationSettings from "./LocationSettings.vue"
+import TimeSelector from "./TimeSelector.vue"
 
-function radians_to_degrees(radians: number) {
-  const pi = Math.PI;
-  return radians * (180 / pi);
+function radians_to_degrees (radians: number) {
+  const pi = Math.PI
+  return radians * (180 / pi)
 }
 
 /**
  * Timespan in ms
  */
-function format_timespan(timespan: number) {
-  timespan = Math.floor(timespan / 1000);
+function format_timespan (timespan: number) {
+  timespan = Math.floor(timespan / 1000)
 
-  let hours = Math.floor(timespan / 3600);
-  timespan = timespan % 3600;
-  let minutes = Math.floor(timespan / 60);
-  timespan = timespan % 60;
-  let seconds = timespan;
+  let hours = Math.floor(timespan / 3600)
+  timespan = timespan % 3600
+  let minutes = Math.floor(timespan / 60)
+  timespan = timespan % 60
+  let seconds = timespan
 
   let hours_s = String(hours),
     minutes_s = String(minutes),
-    seconds_s = String(seconds);
+    seconds_s = String(seconds)
 
-  if (hours < 10) hours_s = "0" + hours;
-  if (minutes < 10) minutes_s = "0" + minutes;
-  if (seconds < 10) seconds_s = "0" + seconds;
+  if (hours < 10) hours_s = "0" + hours
+  if (minutes < 10) minutes_s = "0" + minutes
+  if (seconds < 10) seconds_s = "0" + seconds
 
-  return `${hours_s}:${minutes_s}:${seconds_s}`;
+  return `${hours_s}:${minutes_s}:${seconds_s}`
 }
 
-@Options({
+export default defineComponent({
+  name: "SuntimesRoot",
   emits: {
     "set-route-class": String,
   },
-
   components: {
     LocationSettings,
     TimeSelector,
   },
 
-  watch: {
-    lng(newVal) {
-      localStorage.setItem("lng", newVal);
-    },
+  setup () {
+    const now = ref<Date>(new Date())
+    const tickTask: Ref<number | undefined> = ref(undefined)
+    const tickInterval = ref(250)
+    const loading = ref(true)
 
-    lat(newVal) {
-      localStorage.setItem("lat", newVal);
-    },
+    const lastaltitude = ref(0)
+    const altituderate = ref(0)
 
-    now(newVal) {
-      if (this.year != newVal.getFullYear()) this.year = newVal.getFullYear();
-      if (this.month != newVal.getMonth()) this.month = newVal.getMonth();
-      if (this.day != newVal.getDate()) this.day = newVal.getDate();
-    },
+    const year = ref(0)
+    const month = ref(0)
+    const day = ref(0)
 
-    backgroundColor: {
-      handler(newVal) {
-        this.styles.backgroundSunCurrent = newVal.current;
-        this.styles.backgroundSunNext = newVal.next;
-        this.styles.backgroundSunPrimary =
-          this.sunPosition.altitude > 10 ? "white" : "black";
-        this.styles.opacitySunNext = newVal.nextOpacity;
+    const lng = ref(0)
+    const lat = ref(0)
+
+    const skyEffect = reactive(new SkyEffect({}))
+
+    const locationSettingsActive = ref(false)
+
+    const styles = reactive({
+      backgroundSunCurrent: "#ffffff",
+      backgroundSunNext: "#ffffff",
+      foregroundSun: "#000000",
+      backgroundSunPrimary: "#ffffff",
+      opacitySunNext: 0,
+    })
+
+    const percentage = computed<number>(() => {
+      if (!sunTimes.value.sunrise || !sunTimes.value.sunset || !now.value) return 0
+
+      let _sunset = sunTimes.value.sunset.getTime(),
+        _sunrise = sunTimes.value.sunrise.getTime(),
+        _now = now.value.getTime()
+
+      _now -= _sunrise
+      _sunset -= _sunrise
+
+      return (_now / _sunset) * 100
+    })
+
+    const sunTimes = computed(() => {
+      let _now = new Date(now.value as Date)
+      let _times = SunCalc.getTimes(_now, lat.value, lng.value)
+
+      return {
+        ..._times,
+        day_length: _times.sunset.getTime() - _times.sunrise.getTime(),
+      }
+    })
+
+    const sunPositionRaw = computed(() => SunCalc.getPosition(now.value as Date, lat.value, lng.value))
+    watch(sunPositionRaw, (newVal) => {
+      altituderate.value = radians_to_degrees(
+        ((newVal.altitude - lastaltitude.value) / tickInterval.value) * 60000 * 5
+      ) //one min
+      lastaltitude.value = newVal.altitude
+    })
+
+    const sunPosition = computed(() => {
+      let _position = sunPositionRaw.value
+      return {
+        ..._position,
+        altitude: radians_to_degrees(_position.altitude),
+        azimuth: radians_to_degrees(_position.azimuth) + 180,
+      }
+    })
+
+    watchEffect(() => {
+      skyEffect.altitude = Number(sunPosition.value.altitude)
+      skyEffect.direction = Boolean(percentage.value < 50)
+    })
+
+    const backgroundColor = computed(() => {
+      return skyEffect.getLinearGradient()
+    })
+
+    const foregroundColor = computed(() => sunPosition.value.altitude > 10 ? "black" : "white")
+
+    const styleForWrapper = computed(() => {
+      return {
+        "--background-sun-current": styles.backgroundSunCurrent,
+        "--background-sun-next": styles.backgroundSunNext,
+        "--foreground-sun": styles.foregroundSun,
+        "--background-sun-primary": styles.backgroundSunPrimary,
+        "--opacity-sun-next": styles.opacitySunNext,
+      }
+    })
+
+    watch(backgroundColor,
+      (newVal) => {
+        styles.backgroundSunCurrent = newVal.current
+        styles.backgroundSunNext = newVal.next
+        styles.backgroundSunPrimary =
+          sunPosition.value.altitude > 10 ? "white" : "black"
+        styles.opacitySunNext = newVal.nextOpacity
+      }, { immediate: true })
+
+    watch(foregroundColor,
+      (newVal) => {
+        styles.foregroundSun = newVal
       },
-      immediate: true,
-    },
+      { immediate: true }
+    )
 
-    foregroundColor: {
-      handler(newVal) {
-        this.styles.foregroundSun = newVal;
-      },
-      immediate: true,
-    },
-  },
-})
-export default class Suntimes extends Vue {
-  now: Date = new Date();
-  tickTask: number | undefined = undefined;
-  tickInterval = 250;
-  loading = true;
+    /**
+     * Tick clock
+     */
+    const tick = () => { now.value = new Date() }
 
-  lastaltitude = 0;
-  altituderate = 0;
+    watch(now, (newVal) => {
+      if (year.value != newVal.getFullYear()) year.value = newVal.getFullYear()
+      if (month.value != newVal.getMonth()) month.value = newVal.getMonth()
+      if (day.value != newVal.getDate()) day.value = newVal.getDate()
+    })
 
-  year = 0;
-  month = 0;
-  day = 0;
-
-  lng = 0;
-  lat = 0;
-
-  skyEffect: SkyEffect = new SkyEffect({});
-
-  locationSettingsActive = false;
-
-  styles = {
-    backgroundSunCurrent: "#ffffff",
-    backgroundSunNext: "#ffffff",
-    foregroundSun: "#000000",
-    backgroundSunPrimary: "#ffffff",
-    opacitySunNext: 0,
-  };
-
-  get percentage(): number {
-    if (!this.sunTimes.sunrise || !this.sunTimes.sunset || !this.now) return 0;
-
-    let _sunset = this.sunTimes.sunset.getTime(),
-      _sunrise = this.sunTimes.sunrise.getTime(),
-      _now = this.now.getTime();
-
-    _now -= _sunrise;
-    _sunset -= _sunrise;
-
-    return (_now / _sunset) * 100;
-  }
-
-  get sunTimes() {
-    let _now = new Date(this.now);
-    let _times = SunCalc.getTimes(_now, this.lat, this.lng);
-
-    return {
-      ..._times,
-      day_length: _times.sunset.getTime() - _times.sunrise.getTime(),
-    };
-  }
-
-  get sunPosition() {
-    let _position = SunCalc.getPosition(this.now, this.lat, this.lng);
-
-    this.altituderate = radians_to_degrees(
-      ((_position.altitude - this.lastaltitude) / this.tickInterval) * 60000 * 5
-    ); //one min
-    this.lastaltitude = _position.altitude;
-    return {
-      ..._position,
-      altitude: radians_to_degrees(_position.altitude),
-      azimuth: radians_to_degrees(_position.azimuth) + 180,
-    };
-  }
-
-  get backgroundColor() {
-    this.skyEffect.altitude = Number(this.sunPosition.altitude);
-    this.skyEffect.direction = Boolean(this.percentage < 50);
-    return this.skyEffect.getLinearGradient();
-  }
-
-  get foregroundColor() {
-    return this.sunPosition.altitude > 10 ? "black" : "white";
-  }
-
-  get styleForWrapper() {
-    return {
-      "--background-sun-current": this.styles.backgroundSunCurrent,
-      "--background-sun-next": this.styles.backgroundSunNext,
-      "--foreground-sun": this.styles.foregroundSun,
-      "--background-sun-primary": this.styles.backgroundSunPrimary,
-      "--opacity-sun-next": this.styles.opacitySunNext,
-    };
-  }
-
-  /**
-   * Tick clock
-   */
-  tick() {
-    this.now = new Date();
-  }
-
-  geolocate() {
-    navigator.geolocation.getCurrentPosition((position) => {
-      this.lat = position.coords.latitude;
-      this.lng = position.coords.longitude;
-    });
-  }
-
-  refresh() {
-    this.now = new Date();
-  }
-
-  skyEffectDemo(step = 1, hour = 0, total = 1440) {
-    clearInterval(this.tickTask);
-    this.now.setHours(hour, 0, 0, 0);
-
-    for (let index = 0; index < total / step; index++) {
-      setTimeout(() => {
-        this.now = new Date(this.now.getTime() + step * 60000);
-      }, index * 50);
+    // Geolocate
+    const geolocate = () => {
+      navigator.geolocation.getCurrentPosition((position) => {
+        lat.value = position.coords.latitude
+        lng.value = position.coords.longitude
+      })
     }
-  }
 
-  //Start tick task
-  startTick() {
-    if (this.tickTask) return;
+    watch(lng, (newVal) => {
+      localStorage.setItem("lng", newVal.toString())
+    })
 
-    this.tickTask = setInterval(this.tick, this.tickInterval);
-  }
+    watch(lat, (newVal) => {
+      localStorage.setItem("lat", newVal.toString())
+    })
 
-  //Clear tick task
-  stopTick() {
-    clearInterval(this.tickTask);
-    this.tickTask = undefined;
-  }
+    const refresh = () => { now.value = new Date() }
 
-  strftime = strftime;
-  format_timespan = format_timespan;
+    const skyEffectDemo = (step = 1, hour = 0, total = 1440) => {
+      clearInterval(tickTask.value)
+      now.value.setHours(hour, 0, 0, 0)
 
-  created() {
+      for (let index = 0; index < total / step; index++) {
+        setTimeout(() => {
+          now.value = new Date(now.value.getTime() + step * 60000)
+        }, index * 50)
+      }
+    }
+
+    //Start tick task
+    const startTick = () => {
+      if (tickTask.value) return
+
+      tickTask.value = setInterval(tick, tickInterval.value)
+    }
+    // Stop tick task
+    const stopTick = () => {
+      clearInterval(tickTask.value)
+      tickTask.value = undefined
+    }
+
+    onBeforeUnmount(() => {
+      stopTick()
+    })
+
+    //Init
     //Setup clocktick
-    this.startTick();
+    startTick()
 
     //Check localstrorage for longitude and latitude and set;
     let _lng = Number(localStorage.getItem("lng")),
-      _lat = Number(localStorage.getItem("lat"));
+      _lat = Number(localStorage.getItem("lat"))
 
-    if (!isNaN(_lng)) this.lng = _lng;
+    if (!isNaN(_lng)) lng.value = _lng
+    if (!isNaN(_lat)) lat.value = _lat
 
-    if (!isNaN(_lat)) this.lat = _lat;
+    return {
+      styleForWrapper,
+      locationSettingsActive,
+      lat, lng,
+      geolocate,
+      strftime, now,
+      sunTimes,
+      format_timespan,
+      sunPosition,
+      altituderate,
+      percentage,
+      stopTick,
+      startTick
+    }
   }
-
-  beforeUnmount() {
-    this.stopTick();
-  }
-}
+})
 </script>
 <style lang="scss" scoped>
-@use "@/scss/init/variables" as *;
+@use "@/scss/init/variables"as *;
 
 .sunpercentage {
   width: 100%;
@@ -320,10 +312,12 @@ export default class Suntimes extends Vue {
     justify-content: space-between;
     align-items: baseline;
     position: relative;
+
     &__buttons {
       button {
         margin-left: 10px;
       }
+
       i {
         font-size: 3rem;
       }
