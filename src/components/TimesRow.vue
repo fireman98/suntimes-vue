@@ -5,14 +5,14 @@
 </template>
 
 <script lang="ts">
-import { DateTime } from "luxon";
-import SunCalc from "suncalc";
+import { DateTime } from "luxon"
+import SunCalc from "suncalc"
 import SuntimesUtility, {
   GetTimesResultLuxon,
-} from "@/classes/SuntimesUtility";
-import useColumnsForHeadings from "@/composables/useColumnsForHeadings";
-import { toRef, defineComponent, ref, ComponentPropsOptions } from "vue";
-import { PropOptions } from "vue-class-component";
+} from "@/classes/SuntimesUtility"
+import useColumnsForHeadings from "@/composables/useColumnsForHeadings"
+import { toRef, defineComponent, ref, ComponentPropsOptions, PropType } from "vue"
+import { SuntimesViewType } from "@/interfaces/Suntimes"
 
 export default defineComponent({
   props: {
@@ -22,7 +22,7 @@ export default defineComponent({
     },
 
     viewType: {
-      type: String,
+      type: String as PropType<SuntimesViewType>,
     },
 
     headings: {
@@ -32,15 +32,15 @@ export default defineComponent({
     },
   },
 
-  setup($props) {
-    const headings = toRef($props, "headings");
-    const date = toRef($props, "date");
+  setup ($props) {
+    const headings = toRef($props, "headings")
+    const date = toRef($props, "date")
 
-    const columns = useColumnsForHeadings(headings, date);
+    const columns = useColumnsForHeadings(headings, date)
 
     return {
       ...columns,
-    };
+    }
   },
-});
+})
 </script>
