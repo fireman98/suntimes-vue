@@ -7,17 +7,22 @@
       <div class="suntimes__header__buttons">
         <button class="image-icon-wrapper location-settings__button btn"
           :class="{ 'btn--active': locationSettingsActive }" title="Location"
-          @click="locationSettingsActive = !locationSettingsActive">
+          @click="openModal(locationSettingsActive ? undefined : Modal.LocationSettings)">
           <i class="fas fa-map-marker-alt"></i>
         </button>
-        <button disabled class="image-icon-wrapper btn">
+        <button class="image-icon-wrapper general-settings__button btn"
+          :class="{ 'btn--active': generalSettingsActive }"
+          @click="openModal(generalSettingsActive ? undefined : Modal.GeneralSettings)">
           <i class="fas fa-cog"></i>
         </button>
       </div>
     </div>
     <div class="suntimes__modals">
+      <div class="suntimes__modals__modal" v-show="generalSettingsActive">
+        <GeneralSettings @close="generalSettingsActive = false" />
+      </div>
       <div class="suntimes__modals__modal" v-show="locationSettingsActive">
-        <location-settings :lng="lng" :lat="lat" @update:lng="lng = $event" @update:lat="lat = $event"
+        <LocationSettings :lng="lng" :lat="lat" @update:lng="lng = $event" @update:lat="lat = $event"
           @geolocate="geolocate" />
       </div>
     </div>
@@ -27,17 +32,17 @@
       <br />
       <span>Napfelkelte:</span>
       <span class="notranslate">{{
-        strftime("%H:%M:%S", sunTimes.sunrise)
+          strftime("%H:%M:%S", sunTimes.sunrise)
       }}</span>
       <br />
       <span>Naplemente:</span>
       <span class="notranslate">{{
-        strftime("%H:%M:%S", sunTimes.sunset)
+          strftime("%H:%M:%S", sunTimes.sunset)
       }}</span>
       <br />
       <span>Nap hossza:</span>
       <span class="notranslate">{{
-        format_timespan(sunTimes.day_length)
+          format_timespan(sunTimes.day_length)
       }}</span>
       <br />
       <span>Altitude:</span>
@@ -56,7 +61,7 @@
         <div class="determinate" :style="{ width: percentage + '%' }"></div>
       </div>
     </div>
-    <time-selector :time="now" @update:time="now = $event" @stop-tick="stopTick" @go-now="startTick" />
+    <TimeSelector :time="now" @update:time="now = $event" @stop-tick="stopTick" @go-now="startTick" />
     <div>
       Sun data by:
       <a href="https://www.npmjs.com/package/suncalc">https://www.npmjs.com/package/suncalc</a>
@@ -65,12 +70,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
+import { computed, defineComponent, onBeforeMount, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
 import SunCalc from "suncalc"
 import strftime from "strftime"
 import { SkyEffect } from "../classes/SkyEffect"
+import GeneralSettings from "./GeneralSettings.vue"
 import LocationSettings from "./LocationSettings.vue"
 import TimeSelector from "./TimeSelector.vue"
+import { useSettingsStore } from "@/stores/settingsStore"
+import { storeToRefs } from "pinia"
 
 function radians_to_degrees (radians: number) {
   const pi = Math.PI
@@ -100,17 +108,28 @@ function format_timespan (timespan: number) {
   return `${hours_s}:${minutes_s}:${seconds_s}`
 }
 
+enum Modal {
+  GeneralSettings = 'GeneralSettings',
+  LocationSettings = 'LocationSettings'
+}
+
 export default defineComponent({
   name: "SuntimesRoot",
   emits: {
     "set-route-class": String,
   },
   components: {
+    GeneralSettings,
     LocationSettings,
     TimeSelector,
   },
 
   setup () {
+    const settingsStore = useSettingsStore()
+    const { useSkyEffect } = storeToRefs(settingsStore)
+
+    settingsStore.loadFromLocalStorage()
+
     const now = ref<Date>(new Date())
     const tickTask: Ref<number | undefined> = ref(undefined)
     const tickInterval = ref(250)
@@ -128,7 +147,24 @@ export default defineComponent({
 
     const skyEffect = reactive(new SkyEffect({}))
 
+    const generalSettingsActive = ref(false)
     const locationSettingsActive = ref(false)
+
+
+
+    const openModal = (modal?: Modal) => {
+      generalSettingsActive.value = locationSettingsActive.value = false
+
+
+      switch (modal) {
+        case Modal.GeneralSettings:
+          generalSettingsActive.value = true
+          break
+        case Modal.LocationSettings:
+          locationSettingsActive.value = true
+          break
+      }
+    }
 
     const styles = reactive({
       backgroundSunCurrent: "#ffffff",
@@ -179,15 +215,26 @@ export default defineComponent({
     })
 
     watchEffect(() => {
+      if (!useSkyEffect.value)
+        return
+
       skyEffect.altitude = Number(sunPosition.value.altitude)
       skyEffect.direction = Boolean(percentage.value < 50)
     })
 
     const backgroundColor = computed(() => {
+      if (!useSkyEffect.value)
+        return { current: "#ffffff", next: "#ffffff", nextOpacity: 0 }
+
       return skyEffect.getLinearGradient()
     })
 
-    const foregroundColor = computed(() => sunPosition.value.altitude > 10 ? "black" : "white")
+    const foregroundColor = computed(() => {
+      if (!useSkyEffect.value)
+        return "black"
+
+      return sunPosition.value.altitude > 10 ? "black" : "white"
+    })
 
     const styleForWrapper = computed(() => {
       return {
@@ -204,7 +251,7 @@ export default defineComponent({
         styles.backgroundSunCurrent = newVal.current
         styles.backgroundSunNext = newVal.next
         styles.backgroundSunPrimary =
-          sunPosition.value.altitude > 10 ? "white" : "black"
+          !useSkyEffect.value ? "white" : sunPosition.value.altitude > 10 ? "white" : "black"
         styles.opacitySunNext = newVal.nextOpacity
       }, { immediate: true })
 
@@ -284,7 +331,10 @@ export default defineComponent({
 
     return {
       styleForWrapper,
+      generalSettingsActive,
       locationSettingsActive,
+      openModal,
+      Modal,
       lat, lng,
       geolocate,
       strftime, now,
@@ -294,13 +344,14 @@ export default defineComponent({
       altituderate,
       percentage,
       stopTick,
-      startTick
+      startTick,
+      settingsStore
     }
   }
 })
 </script>
 <style lang="scss" scoped>
-@use "@/scss/init/variables"as *;
+@use "@/scss/init/variables" as *;
 
 .sunpercentage {
   width: 100%;
