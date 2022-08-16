@@ -13,7 +13,7 @@ export default function useColumnsForHeadings (headings: Ref<string[]>, date: Re
 
     const timesResult = computed((): GetTimesResultLuxon => {
         return SuntimesUtility.transformGetTimesResultDatesToLuxon(
-            SunCalc.getTimes(date.value.toJSDate(), 0, 0)
+            SunCalc.getTimes(date.value.toJSDate(), 0, 0) // TODO: use actual location
         )
     })
 

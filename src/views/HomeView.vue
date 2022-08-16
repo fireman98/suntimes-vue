@@ -5,20 +5,27 @@
 </template>
 
 <script lang="ts">
-import { Options, Vue } from "vue-class-component";
-import Suntimes from "@/components/Suntimes.vue"; // @ is an alias to /src
+import { defineComponent } from "vue"
 
-@Options({
+import Suntimes from "@/components/Suntimes.vue" // @ is an alias to /src
+
+export default defineComponent({
+  name: "HomeView",
+  components: {
+    Suntimes
+  },
   emits: {
     "set-route-class": String,
   },
-  components: {
-    Suntimes,
-  },
-})
-export default class HomeView extends Vue {
-  setRouteClass(className: string) {
-    this.$emit("set-route-class", className);
+  setup (_props, context) {
+    const setRouteClass = (className: string) => {
+      context.emit("set-route-class", className)
+    }
+
+    return {
+      setRouteClass
+    }
   }
-}
+})
+
 </script>

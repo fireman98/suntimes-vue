@@ -61,7 +61,7 @@
         <div class="determinate" :style="{ width: percentage + '%' }"></div>
       </div>
     </div>
-    <TimeSelector :time="now" @update:time="now = $event" @stop-tick="stopTick" @go-now="startTick" />
+    <TimeSelector v-model:time="now" @stop-tick="stopTick" @go-now="startTick" />
     <div>
       Sun data by:
       <a href="https://www.npmjs.com/package/suncalc">https://www.npmjs.com/package/suncalc</a>

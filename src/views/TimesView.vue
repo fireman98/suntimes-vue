@@ -9,29 +9,37 @@
 </template>
 
 <script lang="ts">
+import { computed, defineComponent, Ref, ref } from "vue"
 import { DateTime } from "luxon"
-import { Options, Vue } from "vue-class-component"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
 
 import TimesParameters from "@/components/TimesParameters.vue"
 import TimesTable from "@/components/TimesTable.vue"
 
-@Options({
+export default defineComponent({
+  name: "TimesView",
   components: {
     TimesParameters,
     TimesTable,
   },
+  setup () {
+    const from = ref(DateTime.now().startOf("month"))
+    const viewType: Ref<SuntimesViewType> = ref(SuntimesViewType.SUN)
+
+    const to = computed(() => {
+      return from.value.plus({ months: 1 }).endOf("month")
+    })
+
+    const monthName = computed(() => {
+      return from.value.toFormat("LLLL")
+    })
+
+    return {
+      from,
+      viewType,
+      to,
+      monthName
+    }
+  }
 })
-export default class TimesView extends Vue {
-  from = DateTime.now().startOf("month");
-  viewType: SuntimesViewType = SuntimesViewType.SUN;
-
-  get to () {
-    return this.from.plus({ months: 1 }).endOf("month")
-  }
-
-  get monthName () {
-    return this.from.toFormat("LLLL")
-  }
-}
 </script>
