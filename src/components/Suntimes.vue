@@ -399,18 +399,23 @@ export default defineComponent({
     position: relative;
     color: var(--foreground-sun);
 
-    .mui-select__menu {
-      color: #000000 !important;
+    &:deep() {
+
+      .mui-select__menu {
+        color: #000000 !important;
+      }
+
+      input,
+      select {
+        color: var(--foreground-sun) !important;
+      }
+
+      label {
+        color: var(--foreground-sun) !important;
+      }
+
     }
 
-    input,
-    select {
-      color: var(--foreground-sun) !important;
-    }
-
-    label {
-      color: var(--foreground-sun) !important;
-    }
   }
 }
 

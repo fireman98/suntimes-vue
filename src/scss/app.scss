@@ -1,6 +1,10 @@
 @use "init/variables" as *;
 @use "init/index" as init;
 @use "components/index" as components;
+
+//MUI
+@import "~muicss/dist/css/mui";
+
 *,
 :before,
 :after {

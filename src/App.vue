@@ -11,6 +11,7 @@ import { defineComponent, onMounted, onUnmounted, ref } from "vue"
 import PageHeader from "./components/Header.vue"
 import PageSidebar from "./components/Sidebar.vue"
 
+import "muicss/dist/js/mui.min"
 
 export default defineComponent({
   name: "App",

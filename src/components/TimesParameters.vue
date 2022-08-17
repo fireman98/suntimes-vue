@@ -1,12 +1,16 @@
 <template>
     <div class="times-parameters">
-        <input type="date" v-model="fromAsISODate">
-        <select :value="viewType" @change="$emit('update:viewType', $event?.target?.value)">
-            <option v-for="suntimesViewTypeValues of SuntimesViewTypeValues" :value="suntimesViewTypeValues"
-                :key="suntimesViewTypeValues">
-                {{ suntimesViewTypeValues }}
-            </option>
-        </select>
+        <div class="mui-textfield">
+            <input type="date" v-model="fromAsISODate">
+        </div>
+        <div class="mui-select">
+            <select :value="viewType" @change="$emit('update:viewType', $event?.target?.value)">
+                <option v-for="suntimesViewTypeValues of SuntimesViewTypeValues" :value="suntimesViewTypeValues"
+                    :key="suntimesViewTypeValues">
+                    {{ suntimesViewTypeValues }}
+                </option>
+            </select>
+        </div>
     </div>
 </template>
 
