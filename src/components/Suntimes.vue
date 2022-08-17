@@ -91,11 +91,11 @@ function radians_to_degrees (radians: number) {
 function format_timespan (timespan: number) {
   timespan = Math.floor(timespan / 1000)
 
-  let hours = Math.floor(timespan / 3600)
+  const hours = Math.floor(timespan / 3600)
   timespan = timespan % 3600
-  let minutes = Math.floor(timespan / 60)
+  const minutes = Math.floor(timespan / 60)
   timespan = timespan % 60
-  let seconds = timespan
+  const seconds = timespan
 
   let hours_s = String(hours),
     minutes_s = String(minutes),
@@ -178,8 +178,9 @@ export default defineComponent({
       if (!sunTimes.value.sunrise || !sunTimes.value.sunset || !now.value) return 0
 
       let _sunset = sunTimes.value.sunset.getTime(),
-        _sunrise = sunTimes.value.sunrise.getTime(),
         _now = now.value.getTime()
+
+      const _sunrise = sunTimes.value.sunrise.getTime()
 
       _now -= _sunrise
       _sunset -= _sunrise
@@ -188,8 +189,8 @@ export default defineComponent({
     })
 
     const sunTimes = computed(() => {
-      let _now = new Date(now.value as Date)
-      let _times = SunCalc.getTimes(_now, lat.value, lng.value)
+      const _now = new Date(now.value as Date)
+      const _times = SunCalc.getTimes(_now, lat.value, lng.value)
 
       return {
         ..._times,
@@ -206,7 +207,7 @@ export default defineComponent({
     })
 
     const sunPosition = computed(() => {
-      let _position = sunPositionRaw.value
+      const _position = sunPositionRaw.value
       return {
         ..._position,
         altitude: radians_to_degrees(_position.altitude),
@@ -323,7 +324,7 @@ export default defineComponent({
     startTick()
 
     //Check localstrorage for longitude and latitude and set;
-    let _lng = Number(localStorage.getItem("lng")),
+    const _lng = Number(localStorage.getItem("lng")),
       _lat = Number(localStorage.getItem("lat"))
 
     if (!isNaN(_lng)) lng.value = _lng

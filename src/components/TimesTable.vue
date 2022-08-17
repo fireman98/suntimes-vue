@@ -27,12 +27,12 @@ import { SuntimesViewType } from "@/interfaces/Suntimes"
 export default defineComponent({
   props: {
     from: {
-      type: DateTime,
+      type: Object as PropType<DateTime>,
       required: true,
     },
 
     to: {
-      type: DateTime,
+      type: Object as PropType<DateTime>,
       required: true,
     },
 

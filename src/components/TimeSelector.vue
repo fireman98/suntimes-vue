@@ -62,8 +62,8 @@ function isLeapYear (year: number) {
 
 function dayOfYear (date: Date) {
   const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
-  let mn = date.getMonth()
-  let dn = date.getDate()
+  const mn = date.getMonth()
+  const dn = date.getDate()
   let dayOfYear = dayCount[mn] + dn
   if (mn > 1 && isLeapYear(date.getFullYear())) dayOfYear++
   return dayOfYear
@@ -120,7 +120,7 @@ export default defineComponent({
         (val) => {
           val = Number(val)
           if (!isNaN(val)) {
-            let tmpDate = new Date(_time.value)
+            const tmpDate = new Date(_time.value)
             tmpDate.setUTCMonth(0)
             tmpDate.setUTCDate(0)
             return new Date(tmpDate.getTime() + activePeriod.value.step * val)
@@ -141,7 +141,7 @@ export default defineComponent({
           if (!isNaN(val)) {
             const hours = Math.floor(val / 60)
             const minutes = val % 60
-            let tmpDate = new Date(_time.value)
+            const tmpDate = new Date(_time.value)
             tmpDate.setHours(hours)
             tmpDate.setMinutes(minutes)
             return new Date(tmpDate)
@@ -160,7 +160,7 @@ export default defineComponent({
         (val) => {
           val = Number(val)
           if (!isNaN(val)) {
-            let tmpDate = new Date(_time.value)
+            const tmpDate = new Date(_time.value)
             tmpDate.setMinutes(val)
             return new Date(tmpDate)
           } else {

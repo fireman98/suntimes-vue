@@ -24,7 +24,7 @@ export default defineComponent({
     props: {
         from: {
             required: true,
-            type: DateTime
+            type: Object as PropType<DateTime>
         },
 
         viewType: {
