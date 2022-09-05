@@ -11,7 +11,13 @@ export function formatTime (d: DateTime): string {
     return `${hourPrefix}${d.hour}:${minutePrefix}${d.minute}`
 }
 
+export function formatYearMonthDayToISO (year: number, month: number, day: number): string {
+    month = month + 1
+
+    return `${year}-${month < 10 ? '0' + month : month}-${day < 10 ? '0' + day : day}`
+}
 
 export default {
-    formatTime
+    formatTime,
+    formatYearMonthDayToISO
 }

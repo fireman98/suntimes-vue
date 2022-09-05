@@ -62,6 +62,7 @@
       </div>
     </div>
     <TimeSelector v-model:time="now" @stop-tick="stopTick" @go-now="startTick" />
+    <SunGraph :date="currentDayLuxon" />
     <div>
       Sun data by:
       <a href="https://www.npmjs.com/package/suncalc">https://www.npmjs.com/package/suncalc</a>
@@ -77,8 +78,11 @@ import { SkyEffect } from "../classes/SkyEffect"
 import GeneralSettings from "./GeneralSettings.vue"
 import LocationSettings from "./LocationSettings.vue"
 import TimeSelector from "./TimeSelector.vue"
+import SunGraph from "./SunGraph.vue"
 import { useSettingsStore } from "@/stores/settingsStore"
 import { storeToRefs } from "pinia"
+import { DateTime } from "luxon"
+import { formatYearMonthDayToISO } from "@/utils/LuxonUtility"
 
 function radians_to_degrees (radians: number) {
   const pi = Math.PI
@@ -122,6 +126,7 @@ export default defineComponent({
     GeneralSettings,
     LocationSettings,
     TimeSelector,
+    SunGraph,
   },
 
   setup () {
@@ -141,6 +146,8 @@ export default defineComponent({
     const year = ref(0)
     const month = ref(0)
     const day = ref(0)
+    const currentDayLuxon = computed(() => DateTime.fromISO(formatYearMonthDayToISO(year.value, month.value, day.value)))
+
 
     const lng = ref(0)
     const lat = ref(0)
@@ -338,7 +345,7 @@ export default defineComponent({
       Modal,
       lat, lng,
       geolocate,
-      strftime, now,
+      strftime, now, currentDayLuxon,
       sunTimes,
       format_timespan,
       sunPosition,

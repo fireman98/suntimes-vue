@@ -3,6 +3,7 @@ import { GetTimesResult } from "suncalc"
 import { DateTime } from "luxon"
 import { DAY } from "@/helpers/Timeconsts"
 import Period from "@/interfaces/Period"
+import { radians_to_degrees } from "@/helpers/General"
 
 export interface GetTimesResultLuxon {
     dawn: DateTime
@@ -95,8 +96,30 @@ function transformGetTimesResultDatesToLuxon (getTimesResult: GetTimesResult): G
     }
 }
 
+export function getSunPathForDay (day: DateTime, n = 1440) {
+    const start = day.startOf("day").toJSDate(),
+        end = day.plus({ days: 1 }).startOf("day").toJSDate()
+
+    const startMs = start.getTime()
+
+    const diff = Math.floor((end.getTime() - start.getTime()) / n)
+    const times = Array.from({ length: n }, (_v, k) => {
+
+        const _position = SunCalc.getPosition(new Date(startMs + k * diff), 48.1, 20.7)
+
+        return {
+            time: new Date(startMs + k * diff),
+            altitude: radians_to_degrees(_position.altitude),
+            azimuth: radians_to_degrees(_position.azimuth) + 180,
+        }
+    })
+
+    return times
+}
+
 export default {
     calcDaysData,
     getMissingPeriods,
-    transformGetTimesResultDatesToLuxon
+    transformGetTimesResultDatesToLuxon,
+    getSunPathForDay
 }

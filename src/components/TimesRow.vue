@@ -1,6 +1,7 @@
 <template>
   <tr class="times-row">
     <td v-for="(column, index) of columns" :key="index">{{ column }}</td>
+    <SunGraph :date="date" />
   </tr>
 </template>
 
@@ -13,8 +14,13 @@ import SuntimesUtility, {
 import useColumnsForHeadings from "@/composables/useColumnsForHeadings"
 import { toRef, defineComponent, ref, ComponentPropsOptions, PropType } from "vue"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
+import SunGraph from "./SunGraph.vue"
 
 export default defineComponent({
+  name: "TimesRow",
+  components: {
+    SunGraph
+  },
   props: {
     date: {
       type: Object as PropType<DateTime>,
