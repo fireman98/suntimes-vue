@@ -32,17 +32,17 @@
       <br />
       <span>Napfelkelte:</span>
       <span class="notranslate">{{
-          strftime("%H:%M:%S", sunTimes.sunrise)
+      strftime("%H:%M:%S", sunTimes.sunrise)
       }}</span>
       <br />
       <span>Naplemente:</span>
       <span class="notranslate">{{
-          strftime("%H:%M:%S", sunTimes.sunset)
+      strftime("%H:%M:%S", sunTimes.sunset)
       }}</span>
       <br />
       <span>Nap hossza:</span>
       <span class="notranslate">{{
-          format_timespan(sunTimes.day_length)
+      format_timespan(sunTimes.day_length)
       }}</span>
       <br />
       <span>Altitude:</span>
@@ -62,7 +62,7 @@
       </div>
     </div>
     <TimeSelector v-model:time="now" @stop-tick="stopTick" @go-now="startTick" />
-    <SunGraph :date="currentDayLuxon" />
+    <SunGraph :date="currentDayLuxon" :activePoint="minuteOfDay" :label-color="styleForWrapper['--foreground-sun']" />
     <div>
       Sun data by:
       <a href="https://www.npmjs.com/package/suncalc">https://www.npmjs.com/package/suncalc</a>
@@ -131,7 +131,7 @@ export default defineComponent({
 
   setup () {
     const settingsStore = useSettingsStore()
-    const { useSkyEffect } = storeToRefs(settingsStore)
+    const { useSkyEffect, lng, lat } = storeToRefs(settingsStore)
 
     settingsStore.loadFromLocalStorage()
 
@@ -148,9 +148,8 @@ export default defineComponent({
     const day = ref(0)
     const currentDayLuxon = computed(() => DateTime.fromISO(formatYearMonthDayToISO(year.value, month.value, day.value)))
 
+    const minuteOfDay = computed(() => now.value.getHours() * 60 + now.value.getMinutes())
 
-    const lng = ref(0)
-    const lat = ref(0)
 
     const skyEffect = reactive(new SkyEffect({}))
 
@@ -345,7 +344,7 @@ export default defineComponent({
       Modal,
       lat, lng,
       geolocate,
-      strftime, now, currentDayLuxon,
+      strftime, now, currentDayLuxon, minuteOfDay,
       sunTimes,
       format_timespan,
       sunPosition,
@@ -425,6 +424,10 @@ export default defineComponent({
     }
 
   }
+}
+
+.sun-graph {
+  margin-bottom: 30px;
 }
 
 a {

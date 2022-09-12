@@ -3,9 +3,15 @@ import { formatTime } from "@/utils/LuxonUtility"
 import { DateTime } from "luxon"
 import SuntimesUtility, { GetTimesResultLuxon } from "@/classes/SuntimesUtility"
 import SunCalc from "suncalc"
+import { useSettingsStore } from "@/stores/settingsStore"
+import { storeToRefs } from "pinia"
 
 
 export default function useColumnsForHeadings (headings: Ref<string[]>, date: Ref<DateTime>) {
+
+    const settingsStore = useSettingsStore()
+    const { lng, lat } = storeToRefs(settingsStore)
+
 
     const ISODate = computed(() => {
         return date.value.toISODate()
@@ -13,7 +19,7 @@ export default function useColumnsForHeadings (headings: Ref<string[]>, date: Re
 
     const timesResult = computed((): GetTimesResultLuxon => {
         return SuntimesUtility.transformGetTimesResultDatesToLuxon(
-            SunCalc.getTimes(date.value.toJSDate(), 0, 0) // TODO: use actual location
+            SunCalc.getTimes(date.value.toJSDate(), lat.value, lng.value)
         )
     })
 

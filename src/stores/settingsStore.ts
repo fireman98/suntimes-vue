@@ -6,12 +6,16 @@ const db = localforage.createInstance({
 })
 
 interface SettingsState {
-    useSkyEffect: boolean
+    useSkyEffect: boolean,
+    lng: number,
+    lat: number
 }
 
 export const useSettingsStore = defineStore('settings', {
     state: (): SettingsState => ({
-        useSkyEffect: true
+        useSkyEffect: true,
+        lng: 0,
+        lat: 0,
     }),
     getters: {
     },

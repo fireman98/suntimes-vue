@@ -10,3 +10,19 @@ export function formatTime (date: Date) {
     return `${hour < 10 ? '0' + hour : hour}:${minute < 10 ? '0' + minute : minute
         } `
 }
+
+export function debounce<FunctionType extends (...args: any) =>
+    any, ThisType> (fv: FunctionType, ms: number) {
+    let timeoutTask: number | undefined
+    let result: ReturnType<FunctionType>
+    return function (this: ThisType, ...args: Parameters<FunctionType>) {
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        const context = this
+        const Args = args
+        function executeFunction () {
+            timeoutTask = undefined
+            result = fv.apply(context, Args)
+        }
+        return (clearInterval(timeoutTask), timeoutTask = setTimeout(executeFunction, ms), result)
+    }
+}
