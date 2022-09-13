@@ -35,10 +35,15 @@ export default defineComponent({
         labelColor: {
             type: String,
             default: "#ffffff"
+        },
+
+        animate: {
+            type: Boolean,
+            default: true,
         }
     },
     setup (props) {
-        const { date, activePoint, labelColor } = toRefs(props)
+        const { date, activePoint, labelColor, animate } = toRefs(props)
 
         const settingsStore = useSettingsStore()
         const { lng, lat } = storeToRefs(settingsStore)
@@ -91,7 +96,7 @@ export default defineComponent({
                     ]
                 },
                 options: {
-                    //animation: false,
+                    animation: animate.value ? undefined : false,
                     parsing: false,
                     spanGaps: true,
 

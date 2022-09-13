@@ -27,7 +27,7 @@ export default defineComponent({
     const viewType: Ref<SuntimesViewType> = ref(SuntimesViewType.SUN)
 
     const to = computed(() => {
-      return from.value.plus({ months: 1 }).endOf("month")
+      return from.value.plus({ months: 0 }).endOf("month")
     })
 
     const monthName = computed(() => {

@@ -1,7 +1,13 @@
 <template>
     <div class="times-parameters">
-        <div class="mui-textfield">
+        <div class="mui-textfield date-input">
             <input type="date" v-model="fromAsISODate">
+            <button class="image-icon-wrapper time-selector__button" @click="goLeft">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="image-icon-wrapper time-selector__button" @click="goRight">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
         <div class="mui-select">
             <select :value="viewType" @change="$emit('update:viewType', $event?.target?.value)">
@@ -57,11 +63,26 @@ export default defineComponent({
             }
         })
 
+        const goLeft = () => {
+            fromAsISODate.value = from.value.plus({ month: -1 }).toISODate()
+        }
+
+        const goRight = () => {
+            fromAsISODate.value = from.value.plus({ month: 1 }).toISODate()
+        }
+
         return {
             SuntimesViewTypeValues,
-            fromAsISODate
+            fromAsISODate,
+            goLeft,
+            goRight
         }
     }
 })
 
 </script>
+<style lang="scss" scoped>
+.date-input {
+    display: flex;
+}
+</style>

@@ -1,9 +1,12 @@
 <template>
-  <table class="times-table">
+  <table class="times-table mui-table mui-table--bordered">
     <thead>
-      <th v-for="(heading, index) of headings" :key="index">
-        {{ heading }}
-      </th>
+      <tr>
+        <th v-for="(heading, index) of headings" :key="index">
+          {{ heading }}
+        </th>
+        <th class="buttons-col"></th>
+      </tr>
     </thead>
     <tbody>
       <!-- Use index for key, to avoid re-creating components on day change -->
@@ -67,3 +70,12 @@ export default defineComponent({
   },
 })
 </script>
+<style lang="scss" scoped>
+:deep() {
+  .buttons-col {
+    width: 100px;
+
+  }
+
+}
+</style>

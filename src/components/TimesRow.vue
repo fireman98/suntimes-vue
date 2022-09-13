@@ -1,7 +1,18 @@
 <template>
   <tr class="times-row">
     <td v-for="(column, index) of columns" :key="index">{{ column }}</td>
-    <SunGraph :date="date" />
+    <td class="buttons-col">
+      <button class="mui-btn mui-btn--small mui-btn--primary" @click="toggleIsOpened">
+        <i class="fas fa-caret-down"></i>
+      </button>
+    </td>
+  </tr>
+  <tr v-show="isOpened">
+    <td colspan="6">
+      <KeepAlive>
+        <SunGraph v-if="isOpened" :date="date" :animate="false" />
+      </KeepAlive>
+    </td>
   </tr>
 </template>
 
@@ -44,9 +55,23 @@ export default defineComponent({
 
     const columns = useColumnsForHeadings(headings, date)
 
+    const isOpened = ref(false)
+    const toggleIsOpened = () => { isOpened.value = !isOpened.value }
+
     return {
       ...columns,
+      isOpened,
+      toggleIsOpened
     }
   },
 })
 </script>
+<style lang="scss" scoped>
+:deep() {
+  .sun-graph>canvas {
+    max-height: 200px;
+    height: 200px;
+
+  }
+}
+</style>
