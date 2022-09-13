@@ -74,4 +74,10 @@ export default defineComponent({
 
   }
 }
+
+.buttons-col {
+  button {
+    margin: 0;
+  }
+}
 </style>

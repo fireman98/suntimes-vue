@@ -59,7 +59,7 @@ export default defineComponent({
             },
 
             set (val) {
-                context.emit("update:from", DateTime.fromISO(val))
+                context.emit("update:from", DateTime.fromISO(val).startOf('month'))
             }
         })
 

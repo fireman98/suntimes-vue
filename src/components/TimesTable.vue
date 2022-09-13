@@ -54,7 +54,7 @@ export default defineComponent({
     const { from, to, viewType } = toRefs($props)
 
     const days = computed(() => {
-      const days = to.value.diff(from.value, "day").days
+      const days = to.value.plus({ days: 1 }).diff(from.value, "day").days
 
       return Array.from({ length: days }, (v, i) =>
         from.value.plus({ days: i })
@@ -77,5 +77,16 @@ export default defineComponent({
 
   }
 
+}
+
+.mui-table:deep() {
+  >tbody>tr>td {
+    padding: 5px;
+
+  }
+}
+
+.mui-table>thead>tr>th {
+  padding: 5px;
 }
 </style>
