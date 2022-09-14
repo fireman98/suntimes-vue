@@ -50,12 +50,12 @@ export default defineComponent({
 
 
         const dayData = computed(() => {
-            return getSunPathForDay(date.value)
+            return getSunPathForDay(date.value, lat.value, lng.value)
         })
 
-        const dayTimes = computed(() => {
+        /*const dayTimes = computed(() => {
             return SuntimesUtility.transformGetTimesResultDatesToLuxon(Suncalc.getTimes(date.value.toJSDate(), lat.value, lng.value))
-        })
+        })*/
 
         const labelsForChart: Array<string> = reactive([])
         const altitudes: Array<{ x: number, y: number }> = reactive([])
@@ -202,7 +202,7 @@ export default defineComponent({
             chart,
             config,
             dayData,
-            dayTimes
+            //dayTimes
         }
 
     }

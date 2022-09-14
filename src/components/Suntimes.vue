@@ -394,6 +394,8 @@ export default defineComponent({
       border-radius: 4px;
       padding: 10px;
       background: var(--background-sun-primary);
+      width: 300px;
+      max-width: 90vw;
     }
   }
 

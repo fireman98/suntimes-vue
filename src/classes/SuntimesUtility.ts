@@ -96,7 +96,7 @@ function transformGetTimesResultDatesToLuxon (getTimesResult: GetTimesResult): G
     }
 }
 
-export function getSunPathForDay (day: DateTime, n = 1440) {
+export function getSunPathForDay (day: DateTime, lat: number, lng: number, n = 1440) {
     const start = day.startOf("day").toJSDate(),
         end = day.plus({ days: 1 }).startOf("day").toJSDate()
 
@@ -105,7 +105,7 @@ export function getSunPathForDay (day: DateTime, n = 1440) {
     const diff = Math.floor((end.getTime() - start.getTime()) / n)
     const times = Array.from({ length: n }, (_v, k) => {
 
-        const _position = SunCalc.getPosition(new Date(startMs + k * diff), 48.1, 20.7)
+        const _position = SunCalc.getPosition(new Date(startMs + k * diff), lat, lng)
 
         return {
             time: new Date(startMs + k * diff),
