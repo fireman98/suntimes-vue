@@ -3,6 +3,7 @@ import { defineAsyncComponent } from 'vue'
 import Loading from "../components/Loading.vue"
 import Error from "../components/Error.vue"
 
+// TODO: add route names
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',

@@ -5,7 +5,7 @@
         <ul>
           <li v-for="link in routes" :key="link.path" @click="$emit('sidebaroff')">
             <router-link :to="link.path" active-class="active">{{
-              getTitle(link)
+            getTitle(link)
             }}</router-link>
           </li>
           <li v-for="link in additional_routes" :key="link.path">
@@ -69,7 +69,7 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-@use "@/scss/init/variables"as *;
+@use "@/scss/init/variables" as *;
 
 .sidebar {
   z-index: 6;
@@ -131,8 +131,9 @@ export default defineComponent({
       $lighterblue 0%,
       $lightblue 51%,
       $mediumblue 75%);
-  opacity: 0.7;
   z-index: 5;
   cursor: pointer;
+  filter: opacity(0.7);
+
 }
 </style>
