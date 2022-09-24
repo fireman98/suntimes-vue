@@ -57,7 +57,7 @@
       <span>Százalék:</span>
       <span class="notranslate">{{ percentage.toFixed(3) }} %</span>
       <br />
-      <div class="progress sunpercentage" :value="percentage">
+      <div class="progress sunpercentage">
         <div class="determinate" :style="{ width: percentage + '%' }"></div>
       </div>
     </div>
@@ -73,6 +73,7 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeMount, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
 import SunCalc from "suncalc"
+// TODO: remove strftime
 import strftime from "strftime"
 import { SkyEffect } from "../classes/SkyEffect"
 import GeneralSettings from "./GeneralSettings.vue"
@@ -180,6 +181,17 @@ export default defineComponent({
       opacitySunNext: 0,
     })
 
+
+    const sunTimes = computed(() => {
+      const _now = new Date(now.value as Date)
+      const _times = SunCalc.getTimes(_now, lat.value, lng.value)
+
+      return {
+        ..._times,
+        day_length: _times.sunset.getTime() - _times.sunrise.getTime(),
+      }
+    })
+
     const percentage = computed<number>(() => {
       if (!sunTimes.value.sunrise || !sunTimes.value.sunset || !now.value) return 0
 
@@ -192,16 +204,6 @@ export default defineComponent({
       _sunset -= _sunrise
 
       return (_now / _sunset) * 100
-    })
-
-    const sunTimes = computed(() => {
-      const _now = new Date(now.value as Date)
-      const _times = SunCalc.getTimes(_now, lat.value, lng.value)
-
-      return {
-        ..._times,
-        day_length: _times.sunset.getTime() - _times.sunrise.getTime(),
-      }
     })
 
     const sunPositionRaw = computed(() => SunCalc.getPosition(now.value as Date, lat.value, lng.value))
@@ -289,11 +291,11 @@ export default defineComponent({
     }
 
     watch(lng, (newVal) => {
-      localStorage.setItem("lng", newVal.toString())
+      settingsStore.saveToLocalStorage()
     })
 
     watch(lat, (newVal) => {
-      localStorage.setItem("lat", newVal.toString())
+      settingsStore.saveToLocalStorage()
     })
 
     const refresh = () => { now.value = new Date() }
@@ -329,12 +331,6 @@ export default defineComponent({
     //Setup clocktick
     startTick()
 
-    //Check localstrorage for longitude and latitude and set;
-    const _lng = Number(localStorage.getItem("lng")),
-      _lat = Number(localStorage.getItem("lat"))
-
-    if (!isNaN(_lng)) lng.value = _lng
-    if (!isNaN(_lat)) lat.value = _lat
 
     return {
       styleForWrapper,
