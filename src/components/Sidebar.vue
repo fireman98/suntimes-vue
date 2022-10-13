@@ -53,13 +53,13 @@ export default defineComponent({
     const getTitle = (route: RouteRecordRaw) => {
       if (!(typeof route === "object" && route !== null)) return "Invalid input"
 
-      if (route.meta && route.meta.title) return route.meta.title
+      if (route.meta && typeof route.meta.title === 'string' && route.meta.title) return route.meta.title
 
       if (route.name) return route.name
 
       if (route.path) return route.path
 
-      return route
+      return ""
     }
 
     return {

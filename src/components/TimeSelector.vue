@@ -13,11 +13,12 @@
     <button class="image-icon-wrapper time-selector__button" @click="goRight">
       <i class="fas fa-chevron-right"></i>
     </button>
-    <input class="time-selector__range" type="range" v-model="rangeValue" :min="activePeriod.rangeMin" :max="
-      typeof activePeriod.rangeMax === 'function'
-        ? activePeriod.rangeMax()
-        : activePeriod.rangeMax
-    " />
+    <input class="time-selector__range" type="range" v-model="rangeValue"
+      :min="typeof activePeriod.rangeMin === 'function' ? activePeriod.rangeMin() : activePeriod.rangeMin" :max="
+        typeof activePeriod.rangeMax === 'function'
+          ? activePeriod.rangeMax()
+          : activePeriod.rangeMax
+      " />
     <button class="image-icon-wrapper time-selector__button" title="Go to current time" @click="goNow">
       <i class="fas fa-history"></i>
     </button>
@@ -95,20 +96,6 @@ export default defineComponent({
       }
     })
 
-    const rangeValue = computed({
-      get () {
-        return activePeriod.value.getValue()
-
-      }, set (val) {
-
-        _time.value = activePeriod.value.getValue(val)
-      }
-    })
-
-    const days_this_year = computed(() => {
-      return days_of_a_year(_time.value.getFullYear())
-    })
-
     const periods: Period[] = [
       new Period(
         "year",
@@ -171,6 +158,16 @@ export default defineComponent({
       ),
     ]
     const activePeriod = ref(periods[1])
+
+    const rangeValue = computed({
+      get () {
+        return activePeriod.value.getValue()
+
+      }, set (val) {
+
+        _time.value = activePeriod.value.getValue(val)
+      }
+    })
 
     const goNow = () => {
       context.emit("go-now")

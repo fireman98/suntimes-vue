@@ -26,7 +26,6 @@
 <script lang="ts">
 import { computed, defineComponent, ref, toRefs } from "vue"
 import useGeocode from "../composables/useGeocode"
-import { NominatimPlace } from "@/interfaces/Suntimes"
 
 
 export default defineComponent({
@@ -35,8 +34,8 @@ export default defineComponent({
     lng: { type: Number, default: 0 },
   },
   emits: {
-    "update:lat": (val: number) => true,
-    "update:lng": (val: number) => true,
+    "update:lat": (val: number) => typeof val === 'number',
+    "update:lng": (val: number) => typeof val === 'number',
     "geolocate": () => true
   },
   setup (props, context) {
@@ -92,7 +91,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @use "@/scss/init/variables" as *;
 
 .position {

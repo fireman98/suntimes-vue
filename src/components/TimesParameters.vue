@@ -23,7 +23,7 @@
 <script lang="ts">
 import { SuntimesViewType } from '@/interfaces/Suntimes'
 import { DateTime } from 'luxon'
-import { computed, defineComponent, PropType, toRef, toRefs } from 'vue'
+import { computed, defineComponent, PropType, toRefs } from 'vue'
 
 
 export default defineComponent({

@@ -8,7 +8,8 @@
     "build:dev": "vue-cli-service build --mode development",
     "test:unit": "vue-cli-service test:unit --verbose",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "npx patch-package"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.5.8",
@@ -52,6 +53,7 @@
     "eslint-plugin-vue": "^9.3.0",
     "jest": "^27.0.4",
     "lint-staged": "^13.0.3",
+    "patch-package": "^6.4.7",
     "sass": "^1.54.4",
     "sass-loader": "^13.0.2",
     "ts-jest": "^27.0.4",

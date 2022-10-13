@@ -21,7 +21,7 @@
 <script lang="ts">
 import { useSettingsStore } from '@/stores/settingsStore'
 import { storeToRefs } from 'pinia'
-import { computed, defineComponent, onUnmounted } from 'vue'
+import { defineComponent, onUnmounted } from 'vue'
 
 
 export default defineComponent({

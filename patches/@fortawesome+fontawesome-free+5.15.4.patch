@@ -1,0 +1,65 @@
+diff --git a/node_modules/@fortawesome/fontawesome-free/package-lock.json b/node_modules/@fortawesome/fontawesome-free/package-lock.json
+new file mode 100644
+index 0000000..c112adf
+--- /dev/null
++++ b/node_modules/@fortawesome/fontawesome-free/package-lock.json
+@@ -0,0 +1,5 @@
++{
++  "name": "@fortawesome/fontawesome-free",
++  "version": "5.15.3",
++  "lockfileVersion": 1
++}
+diff --git a/node_modules/@fortawesome/fontawesome-free/scss/_larger.scss b/node_modules/@fortawesome/fontawesome-free/scss/_larger.scss
+index 27c2ad5..e081559 100644
+--- a/node_modules/@fortawesome/fontawesome-free/scss/_larger.scss
++++ b/node_modules/@fortawesome/fontawesome-free/scss/_larger.scss
+@@ -1,10 +1,10 @@
+ // Icon Sizes
+ // -------------------------
+-
++@use 'sass:math';
+ // makes the font 33% larger relative to the icon container
+ .#{$fa-css-prefix}-lg {
+-  font-size: (4em / 3);
+-  line-height: (3em / 4);
++  font-size: math.div(4em, 3);
++  line-height: math.div(3em, 4);
+   vertical-align: -.0667em;
+ }
+ 
+diff --git a/node_modules/@fortawesome/fontawesome-free/scss/_list.scss b/node_modules/@fortawesome/fontawesome-free/scss/_list.scss
+index 8ebf333..6c16eb2 100644
+--- a/node_modules/@fortawesome/fontawesome-free/scss/_list.scss
++++ b/node_modules/@fortawesome/fontawesome-free/scss/_list.scss
+@@ -1,9 +1,10 @@
+ // List Icons
+ // -------------------------
++@use 'sass:math';
+ 
+ .#{$fa-css-prefix}-ul {
+   list-style-type: none;
+-  margin-left: $fa-li-width * 5/4;
++  margin-left: $fa-li-width * math.div(5, 4);
+   padding-left: 0;
+ 
+   > li { position: relative; }
+diff --git a/node_modules/@fortawesome/fontawesome-free/scss/_variables.scss b/node_modules/@fortawesome/fontawesome-free/scss/_variables.scss
+index f0f4e03..f7730df 100644
+--- a/node_modules/@fortawesome/fontawesome-free/scss/_variables.scss
++++ b/node_modules/@fortawesome/fontawesome-free/scss/_variables.scss
+@@ -1,5 +1,6 @@
+ // Variables
+ // --------------------------
++@use 'sass:math';
+ 
+ $fa-font-path:         "../webfonts" !default;
+ $fa-font-size-base:    16px !default;
+@@ -9,7 +10,7 @@ $fa-version:           "5.15.4" !default;
+ $fa-border-color:      #eee !default;
+ $fa-inverse:           #fff !default;
+ $fa-li-width:          2em !default;
+-$fa-fw-width:          (20em / 16);
++$fa-fw-width:          math.div(20em, 16);
+ $fa-primary-opacity:   1 !default;
+ $fa-secondary-opacity: .4 !default;
+ 

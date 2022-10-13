@@ -1,4 +1,4 @@
-import { computed, ComputedRef, Ref } from "vue"
+import { computed, Ref } from "vue"
 import { formatTime } from "@/utils/LuxonUtility"
 import { DateTime } from "luxon"
 import SuntimesUtility, { GetTimesResultLuxon } from "@/classes/SuntimesUtility"

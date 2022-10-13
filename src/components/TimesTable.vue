@@ -20,11 +20,10 @@
 import { DateTime } from "luxon"
 
 import TimesRow from "@/components/TimesRow.vue"
-import SuntimesUtility from "@/classes/SuntimesUtility"
 
 import useHeadingsByViewType from "@/composables/useHeadingsByViewType"
 
-import { ref, toRef, toRefs, defineComponent, computed, PropType } from "vue"
+import { toRefs, defineComponent, computed, PropType } from "vue"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
 
 export default defineComponent({
@@ -50,7 +49,7 @@ export default defineComponent({
     TimesRow,
   },
 
-  setup ($props, $context) {
+  setup ($props) {
     const { from, to, viewType } = toRefs($props)
 
     const days = computed(() => {

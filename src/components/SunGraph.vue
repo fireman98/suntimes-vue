@@ -9,10 +9,9 @@ import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs, 
 import { DateTime } from 'luxon'
 import { ActiveElement, Chart, ChartConfiguration } from 'chart.js'
 import { LinearScale, LineController, CategoryScale, PointElement, LineElement, Filler, Tooltip, Decimation } from "chart.js"
-import Suncalc from "suncalc"
 
 
-import SuntimesUtility, { getSunPathForDay } from "@/classes/SuntimesUtility"
+import { getSunPathForDay } from "@/classes/SuntimesUtility"
 import { formatTime, debounce } from '@/helpers/General'
 import { useSettingsStore } from '@/stores/settingsStore'
 import { storeToRefs } from 'pinia'

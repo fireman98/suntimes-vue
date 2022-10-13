@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeMount, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
+import { computed, defineComponent, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
 import SunCalc from "suncalc"
 // TODO: remove strftime
 import strftime from "strftime"
@@ -139,7 +139,6 @@ export default defineComponent({
     const now = ref<Date>(new Date())
     const tickTask: Ref<number | undefined> = ref(undefined)
     const tickInterval = ref(250)
-    const loading = ref(true)
 
     const lastaltitude = ref(0)
     const altituderate = ref(0)
@@ -277,9 +276,9 @@ export default defineComponent({
     const tick = () => { now.value = new Date() }
 
     watch(now, (newVal) => {
-      if (year.value != newVal.getFullYear()) year.value = newVal.getFullYear()
-      if (month.value != newVal.getMonth()) month.value = newVal.getMonth()
-      if (day.value != newVal.getDate()) day.value = newVal.getDate()
+      if (year.value !== newVal.getFullYear()) year.value = newVal.getFullYear()
+      if (month.value !== newVal.getMonth()) month.value = newVal.getMonth()
+      if (day.value !== newVal.getDate()) day.value = newVal.getDate()
     })
 
     // Geolocate
@@ -290,26 +289,14 @@ export default defineComponent({
       })
     }
 
-    watch(lng, (newVal) => {
+    watch(lng, () => {
       settingsStore.saveToLocalStorage()
     })
 
-    watch(lat, (newVal) => {
+    watch(lat, () => {
       settingsStore.saveToLocalStorage()
     })
 
-    const refresh = () => { now.value = new Date() }
-
-    const skyEffectDemo = (step = 1, hour = 0, total = 1440) => {
-      clearInterval(tickTask.value)
-      now.value.setHours(hour, 0, 0, 0)
-
-      for (let index = 0; index < total / step; index++) {
-        setTimeout(() => {
-          now.value = new Date(now.value.getTime() + step * 60000)
-        }, index * 50)
-      }
-    }
 
     //Start tick task
     const startTick = () => {
@@ -348,7 +335,6 @@ export default defineComponent({
       percentage,
       stopTick,
       startTick,
-      settingsStore
     }
   }
 })
