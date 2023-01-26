@@ -85,4 +85,10 @@ export default defineComponent({
 .date-input {
     display: flex;
 }
+
+.time-selector__button {
+    margin-left: 5px;
+    margin-right: 5px;
+    font-size: 2rem;
+}
 </style>

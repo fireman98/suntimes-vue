@@ -28,21 +28,21 @@
     </div>
     <div>
       <span>Jelenlegi idő</span>
-      <span class="notranslate">{{ strftime("%Y.%m.%d. %H:%M:%S", now) }}</span>
+      <span class="notranslate">{{ strftime ("%Y.%m.%d. %H:%M:%S", now) }}</span>
       <br />
       <span>Napfelkelte:</span>
       <span class="notranslate">{{
-      strftime("%H:%M:%S", sunTimes.sunrise)
+        strftime ("%H:%M:%S", sunTimes.sunrise)
       }}</span>
       <br />
       <span>Naplemente:</span>
       <span class="notranslate">{{
-      strftime("%H:%M:%S", sunTimes.sunset)
+        strftime ("%H:%M:%S", sunTimes.sunset)
       }}</span>
       <br />
       <span>Nap hossza:</span>
       <span class="notranslate">{{
-      format_timespan(sunTimes.day_length)
+        format_timespan (sunTimes.day_length)
       }}</span>
       <br />
       <span>Altitude:</span>

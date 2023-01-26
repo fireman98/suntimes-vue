@@ -1,9 +1,8 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { defineAsyncComponent } from 'vue'
+import { Component, defineAsyncComponent } from 'vue'
 import Loading from "../components/Loading.vue"
 import Error from "../components/Error.vue"
 
-// TODO: add route names
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -34,8 +33,7 @@ const router = createRouter({
 
 
 //Components lazyloader
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function lazyLoadView (AsyncView: Promise<any>) {
+function lazyLoadView (AsyncView: Promise<Component>) {
   const AsyncComp = defineAsyncComponent({
     // The factory function
     loader: () => AsyncView,
