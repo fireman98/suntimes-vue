@@ -1,11 +1,11 @@
 <template>
     <div class="times-parameters">
         <div class="mui-textfield date-input">
-            <input type="date" v-model="fromAsISODate">
-            <button class="image-icon-wrapper time-selector__button" @click="goLeft">
+            <input type="date" v-model="fromAsISODate" aria-label="date">
+            <button class="image-icon-wrapper time-selector__button" @click="goLeft" title="previous">
                 <i class="fas fa-chevron-left"></i>
             </button>
-            <button class="image-icon-wrapper time-selector__button" @click="goRight">
+            <button class="image-icon-wrapper time-selector__button" @click="goRight" title="next">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>

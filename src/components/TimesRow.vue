@@ -2,7 +2,7 @@
   <tr class="times-row">
     <td v-for="(column, index) of columns" :key="index">{{ column }}</td>
     <td class="buttons-col">
-      <button class="mui-btn mui-btn--small mui-btn--primary" @click="toggleIsOpened">
+      <button class="mui-btn mui-btn--small mui-btn--primary" @click="toggleIsOpened" title="Expand / collapse">
         <i class="fas fa-caret-down"></i>
       </button>
     </td>

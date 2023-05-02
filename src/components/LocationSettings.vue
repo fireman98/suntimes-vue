@@ -5,7 +5,7 @@
         @keydown.enter="geocodeAndSave" />
       <label for="suntimes-address-input">Address</label>
       <div class="position__addressDisplay">
-        {{addressDisplay}}
+        {{ addressDisplay }}
       </div>
     </div>
     <div class="mui-divider"></div>

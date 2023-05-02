@@ -47,7 +47,6 @@ export default defineComponent({
         const settingsStore = useSettingsStore()
         const { lng, lat } = storeToRefs(settingsStore)
 
-
         const dayData = computed(() => {
             return getSunPathForDay(date.value, lat.value, lng.value)
         })
@@ -208,6 +207,4 @@ export default defineComponent({
 })
 </script>
 
-<style style="scss" scoped>
-
-</style>
+<style style="scss" scoped></style>
