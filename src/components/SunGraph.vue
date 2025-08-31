@@ -115,7 +115,7 @@ export default defineComponent({
                             mode: "index",
                             callbacks: {
                                 label: (input) => {
-                                    return `Altitude ${input.parsed.y.toFixed(2)} \n Azimuth ${dayData.value[input.parsed.x].azimuth.toFixed(2)}`
+                                    return `Altitude ${input.parsed.y.toFixed(2)} \n Azimuth ${dayData.value[input.parsed.x]!.azimuth.toFixed(2)}`
                                 }
                             }
                         }
@@ -152,10 +152,10 @@ export default defineComponent({
             chart.update()
         }, 500)
 
-        watch([dayData], (newVal) => {
-            for (let i = 0; i < dayData.value.length; i++) {
-                labelsForChart[i] = formatTime(newVal[0][i].time)
-                altitudes[i] = { x: i, y: newVal[0][i].altitude }
+        watch([dayData], ([newDayData]) => {
+            for (let i = 0; i < newDayData.length; i++) {
+                labelsForChart[i] = formatTime(newDayData[i]!.time)
+                altitudes[i] = { x: i, y: newDayData[i]!.altitude }
             }
 
             updateChart()
