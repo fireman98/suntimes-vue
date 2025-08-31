@@ -19,7 +19,7 @@
 <script lang="ts">
 import { DateTime } from "luxon"
 import useColumnsForHeadings from "@/composables/useColumnsForHeadings"
-import { toRef, defineComponent, ref, PropType } from "vue"
+import { toRef, defineComponent, ref, type PropType } from "vue"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
 import SunGraph from "./SunGraph.vue"
 

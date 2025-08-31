@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Keyframes
 @mixin keyframes($animation-name) {
     @-webkit-keyframes #{$animation-name} {
@@ -21,13 +23,13 @@ $progress-bar-color-error: #ff4d94;
     height: 4px;
     display: block;
     width: 100%;
-    background-color: lighten($progress-bar-color, 40%);
+    background-color: color.adjust($progress-bar-color, $lightness: 40%, $space: hsl);
     border-radius: 2px;
     background-clip: padding-box;
     margin: 0.5rem 0 1rem 0;
     overflow: hidden;
     &.error {
-        background-color: lighten($progress-bar-color-error, 40%);
+        background-color: color.adjust($progress-bar-color-error, $lightness: 40%, $space: hsl);
 
         .determinate {
             width: 100%;

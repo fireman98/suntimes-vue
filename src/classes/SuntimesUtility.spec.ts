@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils'
 import SuntimesUtility from "@/classes/SuntimesUtility"
 import { DateTime } from 'luxon'
 import { SECOND } from "@/helpers/Timeconsts"

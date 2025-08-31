@@ -5,9 +5,9 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, PropType, reactive, ref, toRefs, watch } from 'vue'
+import { computed, defineComponent, onMounted, type PropType, reactive, ref, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
-import { ActiveElement, Chart, ChartConfiguration } from 'chart.js'
+import { type ActiveElement, Chart, type ChartConfiguration } from 'chart.js'
 import { LinearScale, LineController, CategoryScale, PointElement, LineElement, Filler, Tooltip, Decimation } from "chart.js"
 
 

@@ -1,7 +1,7 @@
 import SunCalc from "suncalc"
-import { GetTimesResult } from "suncalc"
+import type { GetTimesResult } from "suncalc"
 import { DateTime } from "luxon"
-import Period from "@/interfaces/Period"
+import type Period from "@/interfaces/Period"
 import { radians_to_degrees } from "@/helpers/General"
 
 export interface GetTimesResultLuxon {
@@ -46,7 +46,7 @@ function calcDaysData (from: DateTime, to: DateTime): Map<string, GetTimesResult
  * @param {DateTime} from 
  * @param {DateTime} to 
  */
-function getMissingPeriods (data: Map<string, GetTimesResult>, from: DateTime, to: DateTime) {
+function getMissingPeriods (data: Map<string, GetTimesResult>, from: DateTime<true>, to: DateTime<true>) {
     const outdated_periods: Array<Period> = []
     let current_period: Period | null = null
     const days = Math.ceil(to.diff(from, "day").days)

@@ -1,5 +1,5 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import { Component, defineAsyncComponent } from 'vue'
+import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
+import { type Component, defineAsyncComponent } from 'vue'
 import Loading from "../components/Loading.vue"
 import Error from "../components/Error.vue"
 
@@ -27,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes
 })
 

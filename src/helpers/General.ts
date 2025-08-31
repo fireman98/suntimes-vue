@@ -23,6 +23,6 @@ export function debounce<FunctionType extends (...args: any) =>
             timeoutTask = undefined
             result = fv.apply(context, Args)
         }
-        return (clearInterval(timeoutTask), timeoutTask = setTimeout(executeFunction, ms), result)
+        return (window.clearInterval(timeoutTask), timeoutTask = window.setTimeout(executeFunction, ms), result)
     }
 }

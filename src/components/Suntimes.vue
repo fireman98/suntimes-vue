@@ -27,34 +27,35 @@
       </div>
     </div>
     <div>
-      <span>Jelenlegi idő</span>
-      <span class="notranslate">{{ strftime ("%Y.%m.%d. %H:%M:%S", now) }}</span>
-      <br />
-      <span>Napfelkelte:</span>
+      <span>Jelenlegi idő </span> 
       <span class="notranslate">{{
-        strftime ("%H:%M:%S", sunTimes.sunrise)
-      }}</span>
+        DateTime.fromJSDate(now).toFormat('yyyy.MM.dd HH:mm:ss') }}</span>
       <br />
-      <span>Naplemente:</span>
+      <span>Napfelkelte: </span>
       <span class="notranslate">{{
-        strftime ("%H:%M:%S", sunTimes.sunset)
-      }}</span>
+        DateTime.fromJSDate(sunTimes.sunrise).toFormat('HH:mm:ss')
+        }}</span>
       <br />
-      <span>Nap hossza:</span>
+      <span>Naplemente: </span>
       <span class="notranslate">{{
-        format_timespan (sunTimes.day_length)
-      }}</span>
+        DateTime.fromJSDate(sunTimes.sunset).toFormat('HH:mm:ss')
+        }}</span>
       <br />
-      <span>Altitude:</span>
+      <span>Nap hossza: </span>
+      <span class="notranslate">{{
+        format_timespan(sunTimes.day_length)
+        }}</span>
+      <br />
+      <span>Altitude: </span>
       <span class="notranslate">{{ sunPosition.altitude.toFixed(3) }} deg</span>
       <br />
-      <span>Altitude rate:</span>
+      <span>Altitude rate: </span>
       <span class="notranslate">{{ altituderate.toFixed(2) }} deg / 5min</span>
       <br />
-      <span>Azimuth:</span>
+      <span>Azimuth: </span>
       <span class="notranslate">{{ sunPosition.azimuth.toFixed(3) }} deg</span>
       <br />
-      <span>Százalék:</span>
+      <span>Százalék: </span>
       <span class="notranslate">{{ percentage.toFixed(3) }} %</span>
       <br />
       <div class="progress sunpercentage">
@@ -71,10 +72,8 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, reactive, Ref, ref, watch, watchEffect } from "vue"
+import { computed, defineComponent, onBeforeUnmount, reactive, type Ref, ref, watch, watchEffect } from "vue"
 import SunCalc from "suncalc"
-// TODO: remove strftime
-import strftime from "strftime"
 import { SkyEffect } from "../classes/SkyEffect"
 import GeneralSettings from "./GeneralSettings.vue"
 import LocationSettings from "./LocationSettings.vue"
@@ -85,7 +84,7 @@ import { storeToRefs } from "pinia"
 import { DateTime } from "luxon"
 import { formatYearMonthDayToISO } from "@/utils/LuxonUtility"
 
-function radians_to_degrees (radians: number) {
+function radians_to_degrees(radians: number) {
   const pi = Math.PI
   return radians * (180 / pi)
 }
@@ -93,7 +92,7 @@ function radians_to_degrees (radians: number) {
 /**
  * Timespan in ms
  */
-function format_timespan (timespan: number) {
+function format_timespan(timespan: number) {
   timespan = Math.floor(timespan / 1000)
 
   const hours = Math.floor(timespan / 3600)
@@ -113,7 +112,7 @@ function format_timespan (timespan: number) {
   return `${hours_s}:${minutes_s}:${seconds_s}`
 }
 
-enum Modal {
+export enum Modal {
   GeneralSettings = 'GeneralSettings',
   LocationSettings = 'LocationSettings'
 }
@@ -130,7 +129,7 @@ export default defineComponent({
     SunGraph,
   },
 
-  setup () {
+  setup() {
     const settingsStore = useSettingsStore()
     const { useSkyEffect, lng, lat } = storeToRefs(settingsStore)
 
@@ -302,7 +301,7 @@ export default defineComponent({
     const startTick = () => {
       if (tickTask.value) return
 
-      tickTask.value = setInterval(tick, tickInterval.value)
+      tickTask.value = window.setInterval(tick, tickInterval.value)
     }
     // Stop tick task
     const stopTick = () => {
@@ -327,7 +326,7 @@ export default defineComponent({
       Modal,
       lat, lng,
       geolocate,
-      strftime, now, currentDayLuxon, minuteOfDay,
+      DateTime, now, currentDayLuxon, minuteOfDay,
       sunTimes,
       format_timespan,
       sunPosition,

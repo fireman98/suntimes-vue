@@ -1,4 +1,4 @@
-import { NominatimPlace } from "@/interfaces/Suntimes"
+import type { NominatimPlace } from "@/interfaces/Suntimes"
 import axios from "axios"
 
 const assembleGeocodeURLFromAddress = (address: string) => {
