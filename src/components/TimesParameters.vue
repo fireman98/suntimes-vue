@@ -10,7 +10,7 @@
             </button>
         </div>
         <div class="mui-select">
-            <select :value="viewType" @change="$emit('update:viewType', $event?.target?.value)">
+            <select :value="viewType" @change="$emit('update:viewType', ($event?.target as HTMLInputElement)?.value as SuntimesViewType)">
                 <option v-for="suntimesViewTypeValues of SuntimesViewTypeValues" :value="suntimesViewTypeValues"
                     :key="suntimesViewTypeValues">
                     {{ suntimesViewTypeValues }}
@@ -23,7 +23,7 @@
 <script lang="ts">
 import { SuntimesViewType } from '@/interfaces/Suntimes'
 import { DateTime } from 'luxon'
-import { computed, defineComponent, PropType, toRefs } from 'vue'
+import { computed, defineComponent, type PropType, toRefs } from 'vue'
 
 
 export default defineComponent({
@@ -59,7 +59,7 @@ export default defineComponent({
             },
 
             set (val) {
-                context.emit("update:from", DateTime.fromISO(val).startOf('month'))
+                context.emit("update:from", DateTime.fromISO(val!).startOf('month'))
             }
         })
 

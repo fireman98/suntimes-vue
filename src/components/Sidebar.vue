@@ -22,7 +22,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "vue"
-import { RouteRecordRaw, useRouter } from "vue-router"
+import { type RouteRecordRaw, useRouter } from "vue-router"
 
 export default defineComponent({
   name: "PageSidebar",

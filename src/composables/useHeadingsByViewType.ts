@@ -1,5 +1,5 @@
 import { SuntimesViewType } from './../interfaces/Suntimes'
-import { computed, Ref } from 'vue'
+import { computed, type Ref } from 'vue'
 
 const sunViewHeadings = ["date", "dawn", "sunrise", "sunset", "dusk"]
 const otherHeadings: Array<string> = ["date", "moonrise"]

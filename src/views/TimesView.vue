@@ -9,7 +9,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, Ref, ref } from "vue"
+import { computed, defineComponent, type Ref, ref } from "vue"
 import { DateTime } from "luxon"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
 

@@ -1,9 +1,7 @@
 @use "init/variables" as *;
 @use "init/index" as init;
 @use "components/index" as components;
-
-//MUI
-@import "~muicss/dist/css/mui";
+@use "sass:map";
 
 *,
 :before,
@@ -38,7 +36,7 @@ body {
     padding-right: 1rem;
     margin: auto;
     @each $name, $width in $container-widths {
-        @media only screen and (min-width: map-get($grid-breakpoints, #{$name} )) {
+        @media only screen and (min-width: map.get($grid-breakpoints, #{$name} )) {
             max-width: $width;
         }
     }

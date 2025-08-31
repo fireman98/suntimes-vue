@@ -23,7 +23,7 @@ import TimesRow from "@/components/TimesRow.vue"
 
 import useHeadingsByViewType from "@/composables/useHeadingsByViewType"
 
-import { toRefs, defineComponent, computed, PropType } from "vue"
+import { toRefs, defineComponent, computed, type PropType } from "vue"
 import { SuntimesViewType } from "@/interfaces/Suntimes"
 
 export default defineComponent({

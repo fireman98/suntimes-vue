@@ -24,7 +24,7 @@ describe("TimesParameters component", () => {
     const from = DateTime.now();
     const viewType = SuntimesViewType.SUN;
 
-    const updateFrom = jest.fn();
+    const updateFrom = vi.fn();
     const component = mount(TimesParameters, {
       props: {
         from: from,
@@ -45,7 +45,7 @@ describe("TimesParameters component", () => {
     const from = DateTime.now();
     const viewType = SuntimesViewType.SUN;
 
-    const updateFrom = jest.fn();
+    const updateFrom = vi.fn();
     const component = mount(TimesParameters, {
       props: {
         from: from,

@@ -1,0 +1,14 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1_2)">
+<rect width="128" height="128" fill="#C83E3E" fill-opacity="0.73"/>
+<ellipse cx="63.5" cy="128" rx="75.5" ry="73" fill="#DD9A6A"/>
+<line x1="7.11113" y1="12.335" x2="27.0011" y2="50.9277" stroke="#DD9A6A" stroke-width="16"/>
+<path d="M64.1416 2L64.0002 45.4164" stroke="#DD9A6A" stroke-width="16"/>
+<line y1="-8" x2="43.4166" y2="-8" transform="matrix(-0.458119 0.888891 0.888891 0.458119 127.89 16)" stroke="#DD9A6A" stroke-width="16"/>
+</g>
+<defs>
+<clipPath id="clip0_1_2">
+<rect width="128" height="128" fill="white"/>
+</clipPath>
+</defs>
+</svg>
