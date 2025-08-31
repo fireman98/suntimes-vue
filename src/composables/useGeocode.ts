@@ -14,6 +14,10 @@ const geocode = async (address: string): Promise<NominatimPlace> => {
             throw new Error("Not found")
 
         const place = res.data[0]
+        if(!place) {
+            throw new Error("Empty placelist")
+        }
+
         return place
 
     } catch (err) {

@@ -59,8 +59,8 @@ export class SkyEffect {
         const nextIndex = Math.min(currentIndex + 1, SkyEffect.skyGradients.length - 1)
         //console.log(absoluteBrightness, currentIndex, nextIndex, absoluteBrightness % 1 === 0 ? 0 : (this.direction ? absoluteBrightness % 1 : 1 - (absoluteBrightness % 1)));
         return {
-            current: SkyEffect.skyGradients[currentIndex],
-            next: SkyEffect.skyGradients[nextIndex],
+            current: SkyEffect.skyGradients[currentIndex]!,
+            next: SkyEffect.skyGradients[nextIndex]!,
             nextOpacity: absoluteBrightness % 1 === 0 ? 0 : (this.direction ? absoluteBrightness % 1 : 1 - (absoluteBrightness % 1)),
         }
     }
