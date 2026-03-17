@@ -58,7 +58,7 @@
     "vite": "7.1.7",
     "vite-plugin-pwa": "^1.0.3",
     "vitest": "3.2.4",
-    "vue-tsc": "3.0.8"
+    "vue-tsc": "3.2.6"
   },
   "msw": {
     "workerDirectory": [
