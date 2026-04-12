@@ -51,7 +51,7 @@
     "lint-staged": "16.4.0",
     "msw": "2.12.14",
     "npm-run-all2": "8.0.4",
-    "prettier": "3.8.1",
+    "prettier": "3.8.2",
     "prettier-plugin-organize-imports": "4.3.0",
     "sass": "1.99.0",
     "typescript": "6.0.2",
