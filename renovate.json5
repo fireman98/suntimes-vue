@@ -1,16 +1,25 @@
 {
-  extends: ["config:recommended"],
+  extends: [
+    'config:recommended',
+  ],
   prConcurrentLimit: 4,
-  schedule: ["every thursday"],
-  minimumReleaseAge: "7 days",
+  schedule: [
+    'on thursday',
+  ],
+  minimumReleaseAge: '7 days',
   packageRules: [
     {
-      matchUpdateTypes: ["minor", "patch"],
-      groupName: "minor and patch dependencies",
+      matchUpdateTypes: [
+        'minor',
+        'patch',
+      ],
+      groupName: 'minor and patch dependencies',
     },
     {
-      matchUpdateTypes: ["security"],
-      minimumReleaseAge: "0 days",
+      matchUpdateTypes: [
+        'security',
+      ],
+      minimumReleaseAge: '0 days',
     },
   ],
 }
