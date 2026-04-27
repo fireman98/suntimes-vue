@@ -44,21 +44,21 @@
     "@vue/eslint-config-typescript": "14.7.0",
     "@vue/test-utils": "2.4.6",
     "@vue/tsconfig": "0.9.1",
-    "eslint": "10.2.0",
+    "eslint": "10.2.1",
     "eslint-plugin-vue": "10.8.0",
     "husky": "9.1.7",
     "jsdom": "29.0.2",
     "lint-staged": "16.4.0",
-    "msw": "2.13.3",
+    "msw": "2.13.4",
     "npm-run-all2": "8.0.4",
     "prettier": "3.8.3",
     "prettier-plugin-organize-imports": "4.3.0",
     "sass": "1.99.0",
-    "typescript": "6.0.2",
+    "typescript": "6.0.3",
     "vite": "7.3.2",
     "vite-plugin-pwa": "^1.2.0",
     "vitest": "4.1.4",
-    "vue-tsc": "3.2.6"
+    "vue-tsc": "3.2.7"
   },
   "msw": {
     "workerDirectory": [
