@@ -3,6 +3,7 @@
     'config:recommended',
   ],
   prConcurrentLimit: 4,
+  prHourlyLimit: 10,
   schedule: [
     'on thursday',
   ],
