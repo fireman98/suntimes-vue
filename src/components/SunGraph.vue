@@ -7,7 +7,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, type PropType, reactive, ref, toRefs, watch } from 'vue'
 import { DateTime } from 'luxon'
-import { type ActiveElement, Chart, type ChartConfiguration } from 'chart.js'
+import { type ActiveElement, Chart, type ChartConfiguration, type ScriptableLineSegmentContext } from 'chart.js'
 import { LinearScale, LineController, CategoryScale, PointElement, LineElement, Filler, Tooltip, Decimation } from "chart.js"
 
 
@@ -41,7 +41,7 @@ export default defineComponent({
             default: true,
         }
     },
-    setup (props) {
+    setup(props) {
         const { date, activePoint, labelColor, animate } = toRefs(props)
 
         const settingsStore = useSettingsStore()
@@ -79,11 +79,11 @@ export default defineComponent({
                                 return [activePoint.value].includes(element.index) ? 8 : 0
                             },
                             segment: {
-                                borderColor: element => {
-                                    return element.p0.parsed.x > (activePoint.value || 0) ? 'rgba(2, 1, 85, 0.4)' : 'rgba(255, 201, 78, 0.4)'
+                                borderColor: (element) => {
+                                    return (element.p0.parsed.x || 0) > (activePoint.value || 0) ? 'rgba(2, 1, 85, 0.4)' : 'rgba(255, 201, 78, 0.4)'
                                 },
                                 backgroundColor: element => {
-                                    return element.p0.parsed.y < 0 ? 'rgba(2, 1, 85, 0.4)' : 'rgba(255, 201, 78, 0.4)'
+                                    return (element.p0.parsed.y || 0) < 0 ? 'rgba(2, 1, 85, 0.4)' : 'rgba(255, 201, 78, 0.4)'
                                 },
                                 //borderDash: ctx => skipped(ctx, [6, 6]),
                             },
@@ -115,7 +115,7 @@ export default defineComponent({
                             mode: "index",
                             callbacks: {
                                 label: (input) => {
-                                    return `Altitude ${input.parsed.y.toFixed(2)} \n Azimuth ${dayData.value[input.parsed.x]!.azimuth.toFixed(2)}`
+                                    return `Altitude ${(input.parsed.y || 0).toFixed(2)} \n Azimuth ${dayData.value[(input.parsed.x || 0)]!.azimuth.toFixed(2)}`
                                 }
                             }
                         }
