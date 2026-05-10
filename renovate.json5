@@ -15,17 +15,6 @@
         'patch',
       ],
       groupName: 'minor and patch dependencies',
-    },
-    {
-      matchUpdateTypes: [
-        'security',
-      ],
-      minimumReleaseAge: '0 days',
-    },
-    {
-      groupName: '0 day packages',
-      matchPackageNames: ['msw'],
-      minimumReleaseAge: '0 days',
-    },
+    }
   ],
 }
