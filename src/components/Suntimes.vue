@@ -33,12 +33,12 @@
       <br />
       <span>Napfelkelte: </span>
       <span class="notranslate">{{
-        DateTime.fromJSDate(sunTimes.sunrise).toFormat('HH:mm:ss')
+        DateTime.fromJSDate(sunTimes.sunrise!).toFormat('HH:mm:ss')
         }}</span>
       <br />
       <span>Naplemente: </span>
       <span class="notranslate">{{
-        DateTime.fromJSDate(sunTimes.sunset).toFormat('HH:mm:ss')
+        DateTime.fromJSDate(sunTimes.sunset!).toFormat('HH:mm:ss')
         }}</span>
       <br />
       <span>Nap hossza: </span>
@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, reactive, type Ref, ref, watch, watchEffect } from "vue"
-import SunCalc from "suncalc"
+import { getTimes, getPosition } from "suncalc"
 import { SkyEffect } from "../classes/SkyEffect"
 import GeneralSettings from "./GeneralSettings.vue"
 import LocationSettings from "./LocationSettings.vue"
@@ -83,11 +83,6 @@ import { useSettingsStore } from "@/stores/settingsStore"
 import { storeToRefs } from "pinia"
 import { DateTime } from "luxon"
 import { formatYearMonthDayToISO } from "@/utils/LuxonUtility"
-
-function radians_to_degrees(radians: number) {
-  const pi = Math.PI
-  return radians * (180 / pi)
-}
 
 /**
  * Timespan in ms
@@ -182,11 +177,11 @@ export default defineComponent({
 
     const sunTimes = computed(() => {
       const _now = new Date(now.value as Date)
-      const _times = SunCalc.getTimes(_now, lat.value, lng.value)
+      const _times = getTimes(_now, lat.value, lng.value)
 
       return {
         ..._times,
-        day_length: _times.sunset.getTime() - _times.sunrise.getTime(),
+        day_length: _times.sunset!.getTime() - _times.sunrise!.getTime(),
       }
     })
 
@@ -204,11 +199,10 @@ export default defineComponent({
       return (_now / _sunset) * 100
     })
 
-    const sunPositionRaw = computed(() => SunCalc.getPosition(now.value as Date, lat.value, lng.value))
+    const sunPositionRaw = computed(() => getPosition(now.value as Date, lat.value, lng.value))
     watch(sunPositionRaw, (newVal) => {
-      altituderate.value = radians_to_degrees(
-        ((newVal.altitude - lastaltitude.value) / tickInterval.value) * 60000 * 5
-      ) //one min
+      altituderate.value = 
+        ((newVal.altitude - lastaltitude.value) / tickInterval.value) * 60000 * 5 //one min
       lastaltitude.value = newVal.altitude
     })
 
@@ -216,8 +210,8 @@ export default defineComponent({
       const _position = sunPositionRaw.value
       return {
         ..._position,
-        altitude: radians_to_degrees(_position.altitude),
-        azimuth: radians_to_degrees(_position.azimuth) + 180,
+        altitude: _position.altitude,
+        azimuth: _position.azimuth,
       }
     })
 

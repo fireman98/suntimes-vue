@@ -1,8 +1,7 @@
-import SunCalc from "suncalc"
-import type { GetTimesResult } from "suncalc"
+import { getTimes, getPosition } from "suncalc"
+import type { SunTimes } from "suncalc"
 import { DateTime } from "luxon"
 import type Period from "@/interfaces/Period"
-import { radians_to_degrees } from "@/helpers/General"
 
 export interface GetTimesResultLuxon {
     dawn: DateTime
@@ -22,7 +21,7 @@ export interface GetTimesResultLuxon {
 }
 
 
-function calcDaysData (from: DateTime, to: DateTime): Map<string, GetTimesResult> {
+function calcDaysData (from: DateTime, to: DateTime): Map<string, SunTimes> {
     // Set start, end to middle of the day
     // to avoid day change due to timezone
     from.set({ hour: 12, minute: 0 })
@@ -31,7 +30,7 @@ function calcDaysData (from: DateTime, to: DateTime): Map<string, GetTimesResult
     const o = new Map()
 
     while (from <= to) {
-        o.set(from.toISODate(), SunCalc.getTimes(from.toJSDate(), 0, 0))
+        o.set(from.toISODate(), getTimes(from.toJSDate(), 0, 0))
 
         from = from.plus({ days: 1 })
     }
@@ -46,7 +45,7 @@ function calcDaysData (from: DateTime, to: DateTime): Map<string, GetTimesResult
  * @param {DateTime} from 
  * @param {DateTime} to 
  */
-function getMissingPeriods (data: Map<string, GetTimesResult>, from: DateTime<true>, to: DateTime<true>) {
+function getMissingPeriods (data: Map<string, SunTimes>, from: DateTime<true>, to: DateTime<true>) {
     const outdated_periods: Array<Period> = []
     let current_period: Period | null = null
     const days = Math.ceil(to.diff(from, "day").days)
@@ -76,22 +75,23 @@ function getMissingPeriods (data: Map<string, GetTimesResult>, from: DateTime<tr
 }
 
 
-function transformGetTimesResultDatesToLuxon (getTimesResult: GetTimesResult): GetTimesResultLuxon {
+function transformGetTimesResultDatesToLuxon (getTimesResult: SunTimes): GetTimesResultLuxon {
+    // TODO: handle null cases
     return {
-        dawn: DateTime.fromJSDate(getTimesResult.dawn),
-        dusk: DateTime.fromJSDate(getTimesResult.dusk),
-        goldenHour: DateTime.fromJSDate(getTimesResult.goldenHour),
-        goldenHourEnd: DateTime.fromJSDate(getTimesResult.goldenHourEnd),
-        nadir: DateTime.fromJSDate(getTimesResult.nadir),
-        nauticalDawn: DateTime.fromJSDate(getTimesResult.nauticalDawn),
-        nauticalDusk: DateTime.fromJSDate(getTimesResult.nauticalDusk),
-        night: DateTime.fromJSDate(getTimesResult.night),
-        nightEnd: DateTime.fromJSDate(getTimesResult.nightEnd),
-        solarNoon: DateTime.fromJSDate(getTimesResult.solarNoon),
-        sunrise: DateTime.fromJSDate(getTimesResult.sunrise),
-        sunriseEnd: DateTime.fromJSDate(getTimesResult.sunriseEnd),
-        sunset: DateTime.fromJSDate(getTimesResult.sunset),
-        sunsetStart: DateTime.fromJSDate(getTimesResult.sunsetStart),
+        dawn: DateTime.fromJSDate(getTimesResult.dawn!),
+        dusk: DateTime.fromJSDate(getTimesResult.dusk!),
+        goldenHour: DateTime.fromJSDate(getTimesResult.goldenHour!),
+        goldenHourEnd: DateTime.fromJSDate(getTimesResult.goldenHourEnd!),
+        nadir: DateTime.fromJSDate(getTimesResult.nadir!),
+        nauticalDawn: DateTime.fromJSDate(getTimesResult.nauticalDawn!),
+        nauticalDusk: DateTime.fromJSDate(getTimesResult.nauticalDusk!),
+        night: DateTime.fromJSDate(getTimesResult.night!),
+        nightEnd: DateTime.fromJSDate(getTimesResult.nightEnd!),
+        solarNoon: DateTime.fromJSDate(getTimesResult.solarNoon!),
+        sunrise: DateTime.fromJSDate(getTimesResult.sunrise!),
+        sunriseEnd: DateTime.fromJSDate(getTimesResult.sunriseEnd!),
+        sunset: DateTime.fromJSDate(getTimesResult.sunset!),
+        sunsetStart: DateTime.fromJSDate(getTimesResult.sunsetStart!),
     }
 }
 
@@ -104,12 +104,12 @@ export function getSunPathForDay (day: DateTime, lat: number, lng: number, n = 1
     const diff = Math.floor((end.getTime() - start.getTime()) / n)
     const times = Array.from({ length: n }, (_v, k) => {
 
-        const _position = SunCalc.getPosition(new Date(startMs + k * diff), lat, lng)
+    const _position = getPosition(new Date(startMs + k * diff), lat, lng)
 
         return {
             time: new Date(startMs + k * diff),
-            altitude: radians_to_degrees(_position.altitude),
-            azimuth: radians_to_degrees(_position.azimuth) + 180,
+            altitude: _position.altitude,
+            azimuth: _position.azimuth,
         }
     })
 

@@ -1,8 +1,8 @@
-import { computed, type Ref } from "vue"
+import { type Ref, computed } from "vue"
 import { formatTime } from "@/utils/LuxonUtility"
-import { DateTime } from "luxon"
+import type { DateTime } from "luxon"
 import SuntimesUtility, { type GetTimesResultLuxon } from "@/classes/SuntimesUtility"
-import SunCalc from "suncalc"
+import { getTimes } from "suncalc"
 import { useSettingsStore } from "@/stores/settingsStore"
 import { storeToRefs } from "pinia"
 
@@ -19,7 +19,7 @@ export default function useColumnsForHeadings (headings: Ref<string[]>, date: Re
 
     const timesResult = computed((): GetTimesResultLuxon => {
         return SuntimesUtility.transformGetTimesResultDatesToLuxon(
-            SunCalc.getTimes(date.value.toJSDate(), lat.value, lng.value)
+            getTimes(date.value.toJSDate(), lat.value, lng.value)
         )
     })
 

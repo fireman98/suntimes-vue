@@ -1,7 +1,7 @@
 import SuntimesUtility from "@/classes/SuntimesUtility"
 import { DateTime } from 'luxon'
 import { SECOND } from "@/helpers/Timeconsts"
-import SunCalc from "suncalc"
+import { getTimes } from "suncalc"
 
 
 function measureTime (days = 1) {
@@ -37,7 +37,7 @@ describe('calcDaysData', () => {
         const endDate = DateTime.now()
 
         const result = SuntimesUtility.calcDaysData(startDate, endDate)
-        const resultWithSunCalc = SunCalc.getTimes(DateTime.now().toJSDate(), 0, 0)
+        const resultWithSunCalc = getTimes(DateTime.now().toJSDate(), 0, 0)
 
         expect(result.get(startDate.toISODate())).toEqual(resultWithSunCalc)
     })
