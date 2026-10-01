@@ -38,7 +38,7 @@
     "@types/luxon": "^3.7.1",
     "@types/node": "^24.0.0",
     "@types/suncalc": "^1.9.2",
-    "@vite-pwa/assets-generator": "^1.0.2",
+    "@vite-pwa/assets-generator": "^2.0.0",
     "@vitejs/plugin-vue": "6.0.9",
     "@vue/eslint-config-prettier": "10.2.0",
     "@vue/eslint-config-typescript": "14.9.0",
